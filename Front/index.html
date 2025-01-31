@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générer une Fichie Client</title>
+    <!-- Font Awesome pour les icônes modernes -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fa;
+            display: flex;
+            flex-direction: column;
+
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #646464;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            padding: 12px 18px;
+            width: 100%;
+            max-width: 350px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #4e73df;
+            outline: none;
+        }
+
+        .btn {
+            background-color: #F4F4F4;
+            color: #152C8D;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-left: 12px;
+            transition: background-color 0.3s;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            background-color: F4F4F4;
+            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.15);
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+
+        .message.success {
+            color: #28a745;
+        }
+
+        .message.error {
+            color: #dc3545;
+        }
+
+        .icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: #4e73df;
+        }
+
+        header {
+            background-color: white;
+            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.15);
+        }
+
+        #logo {
+            height: 8vh;
+            margin: 20px;
+        }
+
+
+
+
+        .card-container {
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+            justify-content: center;
+        }
+
+        .card {
+            width: 40vw;
+            height: 20vh;
+            margin: 15vh 1vw;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="./img/image.png" id="logo">
+    </header>
+    <div class="card-container">
+
+        <div class="container card">
+
+            <h1>Générer un fichier client</h1>
+
+            <div class="input-group">
+                <input type="text" id="clientName" placeholder="Nom du client" required>
+                <button class="btn" id="generateFileBtn"><i class="fas fa-download"></i> Générer</button>
+            </div>
+
+            <div class="message" id="message"></div>
+        </div>
+    </div>
+
+
+    <script>
+        document.getElementById('generateFileBtn').addEventListener('click', function () {
+            const clientName = document.getElementById('clientName').value;
+            const messageDiv = document.getElementById('message');
+
+            if (clientName) {
+                // Simuler la génération d'un fichier
+                messageDiv.textContent = `Le fichier client pour "${clientName}" a été généré avec succès !`;
+                messageDiv.className = 'message success';
+            } else {
+                messageDiv.textContent = 'Veuillez entrer un nom de client.';
+                messageDiv.className = 'message error';
+            }
+        });
+    </script>
+
+</body>
+
+</html>
