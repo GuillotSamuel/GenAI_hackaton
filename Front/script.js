@@ -1,3 +1,5 @@
+let regionsData = [];
+let departmentData = [];
 let citiesData = [];
 
 // Load CSV data with proper error handling
@@ -13,17 +15,22 @@ fetch('data/v_commune_2024.csv')
     rows.forEach(row => {
       const columns = row.split(',');
       if (columns.length > 1) {
-        citiesData.push({
-          code: columns[1],          // Code commune
-          cityName: columns[7],      // Nom de la commune
-          departmentCode: columns[3] // Code département
-        });
+        console.log(columns[0])
+        if (columns[0] === 'COM') {
+          console.log("test");
+          citiesData.push({
+            code: columns[1],          // Code commune
+            cityName: columns[7],      // Nom de la commune
+            departmentCode: columns[3] // Code département
+          });
+        }  // Suppression de la parenthèse fermante en trop ici
       }
     });
   })
   .catch(error => {
     console.error("Erreur lors du chargement du CSV:", error);
   });
+
 
 // DOM elements
 const clientNameInput = document.getElementById('clientName');
