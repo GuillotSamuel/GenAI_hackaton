@@ -175,10 +175,10 @@
                 });
             })
 
-            document.getElementById('generateFileBtn').addEventListener('click', function () {
+            document.getElementById('clientName').addEventListener('input', function () {
                 const clientName = document.getElementById('clientName').value;
                 const suggestionsDiv = document.getElementById('suggestions');
-                suggestionsDiv.innerHTML = '';  // Réinitialise les suggestions à chaque clic
+                suggestionsDiv.innerHTML = '';  // Réinitialise les suggestions à chaque saisie
 
                 // Filtrer les villes ou départements qui correspondent au texte saisi
                 const filteredCities = citiesData.filter(city => {
@@ -192,14 +192,26 @@
                     filteredCities.forEach(city => {
                         const suggestionItem = document.createElement('div');
                         suggestionItem.classList.add('suggestion-item');
-                        suggestionItem.textContent = `${city.cityName} (Département: ${city.departmentCode})`;
+                        
+                        // Nettoyer les guillemets et la parenthèse fermante
+                        const cleanCityName = city.cityName.replace(/["\)]/g, '');  // Enlève " et )
+                        const cleanDepartmentCode = city.departmentCode.replace(/["\)]/g, '');  // Enlève " et )
+
+                        suggestionItem.textContent = `${cleanCityName} ${cleanDepartmentCode}`;  // Afficher sans " et )
+                        
+                        suggestionItem.addEventListener('click', function () {
+                            document.getElementById('clientName').value = `${cleanCityName} ${cleanDepartmentCode}`;  // Remplir l'input
+                            suggestionsDiv.innerHTML = '';  // Réinitialise les suggestions après sélection
+                        });
+                        
                         suggestionsDiv.appendChild(suggestionItem);
                     });
                 } else {
                     // Aucun résultat trouvé
                     suggestionsDiv.textContent = 'Aucune ville ou département trouvé.';
                 }
-            })
+            });
+
 
 
     </script>
