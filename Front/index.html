@@ -142,7 +142,7 @@
 
         <div class="container card">
 
-            <h1>Générer un fichier client</h1>
+            <h1>Générer une fiche collectivité territoriale</h1>
 
             <div class="input-group">
                 <input type="text" id="clientName" placeholder="Nom du client" required>
@@ -175,44 +175,71 @@
                 });
             })
 
-            document.getElementById('clientName').addEventListener('input', function () {
-                const clientName = document.getElementById('clientName').value;
-                const suggestionsDiv = document.getElementById('suggestions');
-                suggestionsDiv.innerHTML = '';  // Réinitialise les suggestions à chaque saisie
+        document.getElementById('clientName').addEventListener('input', function () {
+            const clientName = document.getElementById('clientName').value;
+            const suggestionsDiv = document.getElementById('suggestions');
+            suggestionsDiv.innerHTML = '';  // Réinitialise les suggestions à chaque saisie
 
-                // Filtrer les villes ou départements qui correspondent au texte saisi
-                const filteredCities = citiesData.filter(city => {
-                    const cityMatch = city.cityName.toLowerCase().includes(clientName.toLowerCase());
-                    const departmentMatch = city.departmentCode.includes(clientName);
-                    return cityMatch || departmentMatch;
-                });
-
-                if (filteredCities.length > 0) {
-                    // Afficher les résultats filtrés sous forme de suggestions
-                    filteredCities.forEach(city => {
-                        const suggestionItem = document.createElement('div');
-                        suggestionItem.classList.add('suggestion-item');
-                        
-                        // Nettoyer les guillemets et la parenthèse fermante
-                        const cleanCityName = city.cityName.replace(/["\)]/g, '');  // Enlève " et )
-                        const cleanDepartmentCode = city.departmentCode.replace(/["\)]/g, '');  // Enlève " et )
-
-                        suggestionItem.textContent = `${cleanCityName} ${cleanDepartmentCode}`;  // Afficher sans " et )
-                        
-                        suggestionItem.addEventListener('click', function () {
-                            document.getElementById('clientName').value = `${cleanCityName} ${cleanDepartmentCode}`;  // Remplir l'input
-                            suggestionsDiv.innerHTML = '';  // Réinitialise les suggestions après sélection
-                        });
-                        
-                        suggestionsDiv.appendChild(suggestionItem);
-                    });
-                } else {
-                    // Aucun résultat trouvé
-                    suggestionsDiv.textContent = 'Aucune ville ou département trouvé.';
-                }
+            // Filtrer les villes ou départements qui correspondent au texte saisi
+            const filteredCities = citiesData.filter(city => {
+                const cityMatch = city.cityName.toLowerCase().includes(clientName.toLowerCase());
+                const departmentMatch = city.departmentCode.includes(clientName);
+                return cityMatch || departmentMatch;
             });
 
+            if (filteredCities.length > 0) {
+                // Afficher les résultats filtrés sous forme de suggestions
+                filteredCities.forEach(city => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.classList.add('suggestion-item');
 
+                    // Nettoyer les guillemets et la parenthèse fermante
+                    const cleanCityName = city.cityName.replace(/["\)]/g, '');  // Enlève " et )
+                    const cleanDepartmentCode = city.departmentCode.replace(/["\)]/g, '');  // Enlève " et )
+
+                    suggestionItem.textContent = `${cleanCityName} ${cleanDepartmentCode}`;  // Afficher sans " et )
+
+                    suggestionItem.addEventListener('click', function () {
+                        document.getElementById('clientName').value = `${cleanCityName} ${cleanDepartmentCode}`;  // Remplir l'input
+                        suggestionsDiv.innerHTML = '';  // Réinitialise les suggestions après sélection
+                    });
+
+                    suggestionsDiv.appendChild(suggestionItem);
+                });
+            } else {
+                // Aucun résultat trouvé
+                suggestionsDiv.textContent = 'Aucune ville ou département trouvé.';
+            }
+        });
+
+        document.getElementById('generateFileBtn').addEventListener('click', function () {
+            const clientName = document.getElementById('clientName').value;
+            const messageDiv = document.getElementById('message');
+
+            // Vérifie si le champ de saisie est vide
+            if (!clientName.trim()) {
+                messageDiv.textContent = 'Veuillez entrer un nom de ville ou de département.';
+                return;
+            }
+
+            // Envoi de la valeur au script Python via Fetch
+            fetch('../src/main.py', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ clientName: clientName })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Afficher la réponse du script Python, si besoin
+                    messageDiv.textContent = data.message || 'Fichier généré avec succès.';
+                })
+                .catch(error => {
+                    // En cas d'erreur
+                    messageDiv.textContent = 'Erreur lors de la génération du fichier.';
+                });
+        });
 
     </script>
 
