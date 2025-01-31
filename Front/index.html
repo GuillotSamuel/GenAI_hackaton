@@ -147,6 +147,7 @@
             <div class="input-group">
                 <input type="text" id="clientName" placeholder="Nom du client" required>
                 <button class="btn" id="generateFileBtn"><i class="fas fa-download"></i> Générer</button>
+                <div id="suggestions" class="suggestions-list"></div>
             </div>
 
             <div class="message" id="message"></div>
@@ -155,19 +156,52 @@
 
 
     <script>
-        document.getElementById('generateFileBtn').addEventListener('click', function () {
-            const clientName = document.getElementById('clientName').value;
-            const messageDiv = document.getElementById('message');
 
-            if (clientName) {
-                // Simuler la génération d'un fichier
-                messageDiv.textContent = `Le fichier client pour "${clientName}" a été généré avec succès !`;
-                messageDiv.className = 'message success';
-            } else {
-                messageDiv.textContent = 'Veuillez entrer un nom de client.';
-                messageDiv.className = 'message error';
-            }
-        });
+        let citiesData = [];
+
+        fetch('../Data/v_commune_2024.csv')
+            .then(response => response.text())
+            .then(csvData => {
+                const rows = csvData.split('\n');
+                rows.forEach(row => {
+                    const columns = row.split(',')
+                    if (columns.length > 1) {
+                        citiesData.push({
+                            code: columns[1],  // Code commune
+                            cityName: columns[7],  // Nom de la commune
+                            departmentCode: columns[3]  // Code département
+                        });
+                    }
+                });
+            })
+
+            document.getElementById('generateFileBtn').addEventListener('click', function () {
+                const clientName = document.getElementById('clientName').value;
+                const suggestionsDiv = document.getElementById('suggestions');
+                suggestionsDiv.innerHTML = '';  // Réinitialise les suggestions à chaque clic
+
+                // Filtrer les villes ou départements qui correspondent au texte saisi
+                const filteredCities = citiesData.filter(city => {
+                    const cityMatch = city.cityName.toLowerCase().includes(clientName.toLowerCase());
+                    const departmentMatch = city.departmentCode.includes(clientName);
+                    return cityMatch || departmentMatch;
+                });
+
+                if (filteredCities.length > 0) {
+                    // Afficher les résultats filtrés sous forme de suggestions
+                    filteredCities.forEach(city => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.classList.add('suggestion-item');
+                        suggestionItem.textContent = `${city.cityName} (Département: ${city.departmentCode})`;
+                        suggestionsDiv.appendChild(suggestionItem);
+                    });
+                } else {
+                    // Aucun résultat trouvé
+                    suggestionsDiv.textContent = 'Aucune ville ou département trouvé.';
+                }
+            })
+
+
     </script>
 
 </body>
