@@ -490,3 +490,173 @@ footer {
   background-color: #f9f9f9;
   box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
+
+/* Nouveau style pour le champ de saisie modernisé */
+.input-wrapper {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+/* Positionnement absolu pour la liste des suggestions, directement sous l'input */
+.input-wrapper .suggestions {
+  position: absolute;
+  top: 100%;  /* Juste en dessous de l'input */
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none; /* On l'affiche dynamiquement dans le JS */
+}
+
+.input-wrapper .suggestions.show {
+  display: block;
+}
+
+.input-wrapper .input-icon {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: var(--color-tertiary);
+  font-size: 1.2rem;
+}
+
+.input-wrapper input[type="text"] {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 45px; /* espace pour l'icône à gauche */
+  border: 2px solid var(--border);
+  border-radius: 30px;
+  font-size: 1.1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-wrapper input[type="text"]:focus {
+  border-color: var(--color-tertiary);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+
+/* Optionnel : ajustement du bouton pour l'harmoniser avec le champ */
+.generate-card .btn.generate-btn {
+  margin-top: 1rem;
+}
+
+/* Nouveau style pour le bouton "Générer" */
+
+/* État normal */
+.btn {
+  position: relative;
+  display: inline-block;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-accent); /* Texte vert */
+  background-color: #fff;      /* Fond blanc */
+  border: 2px solid var(--color-accent); /* Bord vert */
+  border-radius: 6px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: color 0.3s ease;
+}
+
+/* Pseudo-élément pour l'effet de remplissage */
+.btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 100%; /* Commence complètement à droite */
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-accent); /* Remplissage vert */
+  z-index: -1;
+  transition: right 0.3s ease;
+}
+
+/* État au survol : le remplissage s'étend de droite à gauche et le texte devient blanc */
+.btn:hover::before {
+  right: 0;
+}
+.btn:hover {
+  color: #fff;
+}
+
+/* Style de la carte dans la section Générer */
+.generate .card {
+  background: var(--card-bg);
+  border-radius: 8px;
+  padding: 2rem;            /* Padding par défaut */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin: 1.5rem auto;      /* Centrée avec marge verticale */
+  max-width: 600px;
+  width: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Effet de survol pour ajouter de l'élévation */
+.generate .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Adaptation pour les écrans moyens (tablettes) */
+@media (max-width: 768px) {
+  .generate .card {
+    padding: 1.5rem;
+    margin: 1rem auto;
+    max-width: 90%;
+  }
+}
+
+/* Adaptation pour les très petits écrans (smartphones) */
+@media (max-width: 480px) {
+  .generate .card {
+    padding: 1rem;
+    margin: 0.5rem;
+    max-width: 100%;
+  }
+}
+
+/* Style du conteneur d'input (intégré dans la carte) */
+.generate .input-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Style de l'input modernisé */
+.generate .input-container input[type="text"] {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: 30px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Focus sur l'input */
+.generate .input-container input[type="text"]:focus {
+  border-color: var(--color-tertiary);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+
+/* Style responsive du bouton */
+.generate .btn {
+  padding: 0.75rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 30px;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Vous pouvez ajouter des media queries pour affiner le bouton si besoin */
+@media (max-width: 480px) {
+  .generate .btn {
+    width: 100%;
+    text-align: center;
+  }
+}

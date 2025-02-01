@@ -35,7 +35,6 @@ let citiesData = [];
 let regionsData = [];
 let departmentData = [];
 
-
 // DOM Elements for suggestions and messages
 const suggestionsDiv = document.getElementById('suggestions');
 const messageDiv = document.getElementById('message');
@@ -93,56 +92,64 @@ fetch('data/v_commune_2024.csv')
     suggestionsDiv.innerHTML = "Erreur de chargement des données";
   });
 
-function setupSearch() {
-  let debounceTimer;
+  function setupSearch() {
+    let debounceTimer;
+  
+    clientNameInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        const searchTerm = clientNameInput.value.trim().toLowerCase();
+        // Réinitialise le conteneur des suggestions
+        suggestionsDiv.innerHTML = '';
+  
+        // Affiche rien si moins de 2 caractères
+        if (searchTerm.length < 2) {
+          suggestionsDiv.classList.remove('show');
+          return;
+        }
+  
+        // Recherche combinée : utilisation de startsWith pour matcher uniquement au début
+        const results = [
+          ...citiesData.filter(c => 
+            c.cityName.toLowerCase().startsWith(searchTerm) ||
+            c.departmentCode.toLowerCase().startsWith(searchTerm)
+          ),
+          ...departmentData.filter(d => 
+            d.departmentName.toLowerCase().startsWith(searchTerm) ||
+            d.code.toLowerCase().startsWith(searchTerm)
+          ),
+          ...regionsData.filter(d => 
+            d.regionName.toLowerCase().startsWith(searchTerm) ||
+            d.code.toLowerCase().startsWith(searchTerm)
+          )
+        ];
+  
+        if (results.length > 0) {
+          results.forEach(item => {
+            const isCity = 'cityName' in item;
+            const text = isCity 
+              ? `${item.cityName} (${item.departmentCode})`
+              : 'departmentName' in item
+                ? `${item.departmentName} (${item.code})`
+                : `${item.regionName} (${item.code})`;
+            suggestionsDiv.appendChild(createSuggestionItem(text));
+          });
+          suggestionsDiv.classList.add('show');
+        } else {
+          suggestionsDiv.textContent = 'Aucun résultat trouvé';
+          suggestionsDiv.classList.add('show');
+        }
+      }, 300);
+    });
+  }
 
-  clientNameInput.addEventListener('input', () => {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      const searchTerm = clientNameInput.value.trim().toLowerCase();
-      suggestionsDiv.innerHTML = '';
-
-      if (searchTerm.length < 2) {
-        
-        return;
-      }
-
-      // Recherche combinée
-      const results = [
-        ...citiesData.filter(c => 
-          c.cityName.toLowerCase().includes(searchTerm) ||
-          c.departmentCode.toLowerCase() === searchTerm
-        ),
-        ...departmentData.filter(d => 
-          d.departmentName.toLowerCase().includes(searchTerm) ||
-          d.code.toLowerCase() === searchTerm
-        ),
-        ...regionsData.filter(d => 
-          d.regionName.toLowerCase().includes(searchTerm) ||
-          d.code.toLowerCase() === searchTerm
-        )
-      ];
-
-      // Affichage des résultats
-      if (results.length > 0) {
-        results.forEach(item => {
-          const isCity = 'cityName' in item;
-          const text = 'cityName' in item 
-            ? `${item.cityName} (${item.departmentCode})`
-            : 'departmentName' in item
-              ? `${item.departmentName} (${item.code})`
-              : `${item.regionName} (${item.code})`;
-
-            
-          suggestionsDiv.appendChild(createSuggestionItem(text));
-        });
-        suggestionsDiv.style.display = 'block';
-      } else {
-        suggestionsDiv.textContent = 'Aucun résultat trouvé';
-      }
-    }, 300);
-  });
-}
+// Ajout d'un écouteur pour effacer le message d'erreur lorsque l'input est vide
+clientNameInput.addEventListener('input', () => {
+  if (clientNameInput.value.trim() === '') {
+    messageDiv.textContent = '';
+    messageDiv.className = 'message';
+  }
+});
 
 clientNameInput.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowDown') {
@@ -197,7 +204,7 @@ document.getElementById('excelFile').addEventListener('change', function(e) {
     const reader = new FileReader();
     reader.onload = function(evt) {
       // Simulate processing of internal data file (Excel/CSV)
-      const content = evt.target.result;perçu
+      const content = evt.target.result;
       aggregatedPreview.textContent = "Aperçu des données importées: " + content.slice(0, 200) + "...";
       importMessage.textContent = "Fichier importé avec succès.";
     }
@@ -219,5 +226,3 @@ document.getElementById('submitFeedback').addEventListener('click', function() {
     feedbackMessage.className = "message success";
   }
 });
-
-

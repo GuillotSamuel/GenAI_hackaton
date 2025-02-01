@@ -88,10 +88,12 @@
             animation: fadeIn 1s ease-out;
           "
         >
-          <h1 style="font-size: 2rem; margin-bottom: 0.5rem; color: white; font-weight: 700">
+          <h1
+            style="font-size: 2rem; margin-bottom: 0.5rem; color: white; font-weight: 700"
+          >
             Fichotron - AI
           </h1>
-          <p style="font-size: 1.5rem; margin-bottom: 1rem; color: white;">
+          <p style="font-size: 1.5rem; margin-bottom: 1rem; color: white">
             Créez vos fiches clients avec une simplicité déconcertante, en un clic !
           </p>
           <a
@@ -110,48 +112,40 @@
       </section>
     </header>
 
-    <main class="">
-
-          <!-- Generate Section -->
-          <section id="generate" class="generate elements-section">
-            <div class="card">
-              <h2>Générer votre fiche client</h2>
-              <div class="input-container">
-                <input
-                  type="text"
-                  id="clientName"
-                  placeholder="Nom du client ou département"
-                  required
-                  aria-autocomplete="list"
-                />
-                <button
-                  class="btn"
-                  id="generateFileBtn"
-                  aria-label="Générer la fiche client"
-                >
-                  <i class="fas fa-download" aria-hidden="true"></i> Générer
-                </button>
-              </div>
-              <div
-                id="suggestions"
-                class="suggestions"
-                role="listbox"
-                aria-live="polite"
-              ></div>
-              <div
-                id="message"
-                class="message"
-                role="alert"
-                aria-live="assertive"
-              ></div>
-            </div>
-          </section>
+    <main class="container">
+      <!-- Generate Section mis à jour -->
+      <section id="generate" class="generate elements-section">
+        <div class="card generate-card">
+          <h2>Générer votre fiche client</h2>
+          <!-- Nouveau conteneur d'input avec suggestions intégrées -->
+          <div class="input-wrapper">
+            <span class="input-icon"><i class="fas fa-search"></i></span>
+            <input
+              type="text"
+              id="clientName"
+              placeholder="Nom du client ou département"
+              required
+              aria-autocomplete="list"
+            />
+            <!-- La liste des suggestions est maintenant dans le wrapper -->
+            <div id="suggestions" class="suggestions" role="listbox" aria-live="polite"></div>
+          </div>
+          <button class="btn generate-btn" id="generateFileBtn" aria-label="Générer la fiche client">
+            <i class="fas fa-download" aria-hidden="true"></i> Générer
+          </button>
+          <div id="message" class="message" role="alert" aria-live="assertive"></div>
+        </div>
+      </section>
 
       <!-- About Section -->
       <section id="about" class="about elements-section">
         <h2>À propos de notre outil</h2>
         <p>
-          Notre solution permet d'automatiser la génération de fiches clients en fusionnant des données publiques issues de différentes sources telles que data.gouv ou wikipédia. Le résultat est une fiche standardisée sous format Word, précise, complète et modifiable, alignée sur vos exigences professionnelles.
+          Notre solution permet d'automatiser la génération de fiches clients en
+          fusionnant des données publiques issues de différentes sources telles
+          que data.gouv ou Wikipédia. Le résultat est une fiche standardisée sous
+          format Word, précise, complète et modifiable, alignée sur vos
+          exigences professionnelles.
         </p>
       </section>
 
@@ -163,21 +157,24 @@
             <i class="fas fa-bolt feature-icon"></i>
             <h3>Rapidité</h3>
             <p>
-              Générez vos fiches en temps réel et réalisez des gains de temps considérables !
+              Générez vos fiches en temps réel et réalisez des gains de temps
+              considérables !
             </p>
           </div>
           <div class="feature-item">
             <i class="fas fa-search feature-icon"></i>
             <h3>Analyse approfondie</h3>
             <p>
-              Obtenez de nombreuses informations sur vos clients et optimisez vos stratégies.
+              Obtenez de nombreuses informations sur vos clients et optimisez
+              vos stratégies.
             </p>
           </div>
           <div class="feature-item">
             <i class="fas fa-shield-alt feature-icon"></i>
             <h3>Sécurité</h3>
             <p>
-              L'outil respecte les normes de sécurité et de confidentialité les plus strictes.
+              L'outil respecte les normes de sécurité et de confidentialité les
+              plus strictes.
             </p>
           </div>
         </div>
@@ -189,40 +186,33 @@
         <ul class="footer-menu">
           <li><a href="#">Mentions légales</a></li>
           <li><a href="#">Nous contacter</a></li>
-          <li>Site réalisé pas LLaMazing Team</li>
+          <li>Site réalisé par LLaMazing Team</li>
         </ul>
       </div>
     </footer>
 
-    <!-- Back to top button -->
+    <!-- Bouton Retour en haut -->
     <button id="back-to-top" class="back-to-top">
       <i class="fas fa-arrow-up"></i>
     </button>
+
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-
         const backToTopButton = document.getElementById('back-to-top');
 
         if (backToTopButton) {
           const handleScroll = () => {
-            if (window.scrollY > 200) {
-              backToTopButton.style.display = 'block';
-            } else {
-              backToTopButton.style.display = 'none';
-            }
+            backToTopButton.style.display = window.scrollY > 200 ? 'block' : 'none';
           };
 
           window.addEventListener('scroll', handleScroll);
-
           handleScroll();
 
           backToTopButton.addEventListener('click', () => {
-            console.log("Back to top button clicked");
             window.scrollTo({ top: 0, behavior: 'smooth' });
           });
         }
       });
-
     </script>
     <script src="script.js"></script>
   </body>
