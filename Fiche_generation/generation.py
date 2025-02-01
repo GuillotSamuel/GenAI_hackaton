@@ -3,12 +3,112 @@ import json
 from docx import Document
 from docx.shared import Pt, Inches
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+import requests
 
+
+# UTILS
 
 def load_json(file_path):
     with open(file_path, 'r') as f:
         return json.load(f)
     
+
+# CALL LLM
+
+def call_llm_api(query):
+    api_url = "https://api.your-llm-service.aws.com/endpoint"
+    
+    payload = {
+        "query": query
+    }
+
+    headers = {
+        "Authorization": "Bearer your_api_key"  # Ajoutez votre clé API si nécessaire
+    }
+
+    response = requests.post(api_url, json=payload, headers=headers)
+    
+    if response.status_code == 200:
+        return response.json()  # Retourne les données JSON si la requête réussit
+    else:
+        print(f"Erreur : {response.status_code}")
+        return {}
+
+
+def create_json(file_path, data):
+    with open(file_path, 'w') as f:
+        json.dump(data, f, indent=4)
+
+
+def get_all_json_files():
+    
+    ### COLLECTIVITE ###
+    
+    # Logo de la collectivité
+    prompt = ""
+    create_json(data_collectivite['logo_collectivite'], call_llm_api(prompt))
+
+    # Finances de la collectivité
+    prompt = ""
+    create_json(data_collectivite['finances_collectivite'], call_llm_api(prompt))
+    
+    # Présentation de la collectivité
+    prompt = ""
+    create_json(data_collectivite['presentation_collectivite'], call_llm_api(prompt))
+    
+    # Projets verts de la collectivité
+    prompt = ""
+    create_json(data_collectivite['projets_verts_collectivite'], call_llm_api(prompt))
+    
+    # Projets sociaux de la collectivité
+    prompt = ""
+    create_json(data_collectivite['projets_sociaux_collectivite'], call_llm_api(prompt))
+    
+    # Représentant de la collectivité
+    prompt = ""
+    create_json(data_collectivite['representant_collectivite'], call_llm_api(prompt))
+    
+    # Budget de la collectivité
+    prompt = ""
+    create_json(data_collectivite['budget_collectivite'], call_llm_api(prompt))
+    
+    # Type de collectivité
+    prompt = ""
+    create_json(data_collectivite['type_collectivite'], call_llm_api(prompt))
+    
+    # A une métropole
+    prompt = ""
+    create_json(data_collectivite['has_a_metropole'], call_llm_api(prompt))
+    
+    
+    ### METROPOLE ###
+    
+    # Finances de la métropole
+    prompt = ""
+    create_json(data_collectivite['finances_metropole'], call_llm_api(prompt))
+    
+    # Présentation de la métropole
+    prompt = ""
+    create_json(data_collectivite['presentation_metropole'], call_llm_api(prompt))
+    
+    # Projets verts de la métropole
+    prompt = ""
+    create_json(data_collectivite['projets_verts_metropole'], call_llm_api(prompt))
+    
+    # Projets sociaux de la métropole
+    prompt = ""
+    create_json(data_collectivite['projets_sociaux_metropole'], call_llm_api(prompt))
+    
+    # Représentant de la métropole
+    prompt = ""
+    create_json(data_collectivite['representant_metropole'], call_llm_api(prompt))
+    
+    # Budget de la métropole
+    prompt = ""
+    create_json(data_collectivite['budget_metropole'], call_llm_api(prompt))
+    
+        
+# DOCUMENT CREATION
 
 def add_cover_page(doc, data_collectivite, data_metropole):
     # Chargement du fichier has_a_metropole
@@ -52,6 +152,8 @@ def create_report(docx_path, data_collectivite, data_metropole):
     doc.save(docx_path)
 
 
+# MAIN
+
 if __name__ == "__main__":
     docx_path = "data/processed/data_report.docx"
     
@@ -76,4 +178,5 @@ if __name__ == "__main__":
         'budget_metropole': "data/raw/budget_metropole.json",
     }
 
+    get_all_json_files(data_collectivite, data_metropole)
     create_report(docx_path, data_collectivite, data_metropole)
