@@ -215,15 +215,40 @@ if (importFileBtn && fileInput) {
   importFileBtn.addEventListener('click', () => {
     fileInput.click();
   });
-  
-  fileInput.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-      messageDiv.textContent = `Fichier "${file.name}" importé avec succès.`;
-      messageDiv.className = 'message success';
-    }
-  });
 }
+  fileInput.setAttribute('multiple', true); // Permettre les fichiers multiples
+  fileInput.addEventListener('change', function(e) {
+  const files = Array.from(e.target.files);
+  const filesContainer = document.getElementById('uploadedFiles');
+  filesContainer.innerHTML = '';
+  
+  files.forEach((file, index) => {
+    const fileItem = document.createElement('div');
+    fileItem.className = 'file-item';
+    fileItem.innerHTML = `
+      <span>${file.name}</span>
+      <span class="remove-file" data-index="${index}">&times;</span>
+    `;
+    filesContainer.appendChild(fileItem);
+  });
+
+  // Gestion de la suppression
+  filesContainer.querySelectorAll('.remove-file').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const index = parseInt(btn.dataset.index);
+      const dt = new DataTransfer();
+      const filesArray = Array.from(fileInput.files);
+      
+      filesArray.splice(index, 1);
+      filesArray.forEach(file => dt.items.add(file));
+      fileInput.files = dt.files;
+      
+      btn.parentElement.remove();
+    });
+  });
+});
+
+
 
 // Back-to-top Button
 document.addEventListener('DOMContentLoaded', () => {

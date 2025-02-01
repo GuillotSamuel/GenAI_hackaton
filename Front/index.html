@@ -99,17 +99,21 @@
             <div id="suggestions" class="suggestions" role="listbox" aria-live="polite"></div>
           </div>
           <!-- Groupe de boutons avec Importer (nouveau) et Générer -->
+          <!-- Corriger la section des boutons -->
           <div class="button-group">
-            <button class="btn import-btn" id="importFileBtn" aria-label="Importer un fichier">
-              <i class="fas fa-upload" aria-hidden="true"></i> Importer
-            </button>
-            <button class="btn generate-btn" id="generateFileBtn" aria-label="Générer la fiche client">
-              <i class="fas fa-download" aria-hidden="true"></i> Générer
-            </button>
+          <button class="btn import-btn" id="importFileBtn" aria-label="Importer un fichier">
+            <i class="fas fa-upload" aria-hidden="true"></i> Importer
+          </button>
+          <div class="spacer"></div>
+          <button class="btn generate-btn" id="generateFileBtn" aria-label="Générer la fiche client">
+            <i class="fas fa-download" aria-hidden="true"></i> Générer
+          </button>
+          <div id="uploadedFiles" class="uploaded-files"></div> <!-- Déplacé en dehors du bouton -->
           </div>
           <div id="message" class="message" role="alert" aria-live="assertive"></div>
           <!-- Champ de fichier caché pour l'importation -->
-          <input type="file" id="fileInput" style="display: none" accept=".csv, .xls, .xlsx, .docx, .doc" />
+          <input type="file" id="fileInput" style="display: none" 
+          accept=".csv, .xls, .xlsx, .docx, .doc" multiple> <!-- Added multiple attribute -->
           <!-- (Optionnel) Texte explicatif pour l'importation -->
           <p class="import-info" style="font-size: 0.9rem; color: var(--color-secondary); margin-top: 0.5rem;">
             Cliquez sur "Importer" pour sélectionner un fichier de données.

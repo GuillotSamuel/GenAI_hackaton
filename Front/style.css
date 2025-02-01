@@ -367,7 +367,7 @@ input[type="text"]:focus {
   font-size: 1rem;
   transition: background 0.3s, box-shadow 0.3s;
   box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-  position: relative;
+  position: inline-block;
   overflow: hidden;
 }
 .btn:active::after {
@@ -651,9 +651,22 @@ footer {
 
 /* Vous pouvez ajouter des media queries pour affiner le bouton si besoin */
 @media (max-width: 480px) {
-  .generate .btn {
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .spacer {
+    display: none;
+  }
+  
+  .btn {
     width: 100%;
-    text-align: center;
+    justify-content: center;
+  }
+  
+  .file-item {
+    font-size: 0.9rem;
+    padding: 0.5rem;
   }
 }
 
@@ -665,4 +678,79 @@ footer {
   font-weight: bold;
   font-size: 0.9rem;
   border-top: 1px solid var(--border);
+}
+
+/* Assurez-vous que les boutons ont la même hauteur et la même taille */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px; /* Hauteur fixe pour tous les boutons */
+  padding: 0 1rem; /* Padding cohérent */
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Rapprochez les boutons */
+.button-group {
+  display: flex;
+  gap: 0.5rem; /* Réduisez la valeur de gap pour rapprocher les boutons */
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+/* Assurez-vous que les boutons ont la même hauteur et la même taille */
+.btn.import-btn,
+.btn.generate-btn {
+  width: 150px; /* Largeur fixe pour tous les boutons */
+}
+
+/* Ajustez le spacer pour qu'il prenne moins de place */
+.spacer {
+  flex: 0.5; /* Réduisez la valeur de flex pour rapprocher les boutons */
+}
+
+
+/* Améliorer l'affichage des fichiers */
+.uploaded-files {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  margin: 0.25rem 0;
+  transition: background 0.2s;
+}
+
+.file-item:hover {
+  background: #e9ecef;
+}
+
+.remove-file {
+  color: #dc3545;
+  cursor: pointer;
+  padding: 0.25rem;
+  margin-left: 1rem;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.remove-file:hover {
+  background: #ffeef0;
 }
