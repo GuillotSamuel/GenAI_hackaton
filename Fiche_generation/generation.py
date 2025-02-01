@@ -11,7 +11,7 @@ import requests
 def load_json(file_path):
     with open(file_path, 'r') as f:
         return json.load(f)
-
+    
 
 # CALL LLM
 
@@ -98,10 +98,6 @@ def get_all_json_files(data_collectivite, data_metropole):
     # Budget de la collectivité
     prompt = get_prompt("data/prompts/budget_collectivite.txt")
     create_json(data_collectivite['budget_collectivite'], call_llm_api(prompt))
-    
-    # Type de collectivité
-    prompt = get_prompt("data/prompts/type_collectivite.txt")
-    create_json(data_collectivite['type_collectivite'], call_llm_api(prompt))
     
     # A une métropole
     prompt = get_prompt("data/prompts/has_a_metropole.txt")
@@ -226,7 +222,11 @@ def create_report(docx_path, data_collectivite, data_metropole):
     has_metropole = has_metropole_data.get('has_a_metropole', False)
     doc = Document()
     add_cover_page(doc, data_collectivite, data_metropole, has_metropole)
-    add_representants(doc, data_collectivite, data_metropole, has_metropole)
+    # add_bugdet(doc, data_collectivite, data_metropole, has_metropole)
+    # add_general_presentation(doc, data_collectivite, data_metropole, has_metropole)
+    # add_green_projects(doc, data_collectivite, data_metropole, has_metropole)
+    # add_representants(doc, data_collectivite, data_metropole, has_metropole)
+    # add_finances(doc, data_collectivite, data_metropole, has_metropole)
     doc.save(docx_path)
 
 
@@ -243,7 +243,6 @@ if __name__ == "__main__":
         'projets_sociaux_collectivite': "data/raw/projets_sociaux_collectivite.json",
         'representant_collectivite': "data/raw/representant_collectivite.json",
         'budget_collectivite': "data/raw/budget_collectivite.json",
-        'type_collectivite': "data/raw/type_collectivite.json",
         'has_a_metropole': "data/raw/has_a_metropole.json",
     }
     
@@ -256,5 +255,5 @@ if __name__ == "__main__":
         'budget_metropole': "data/raw/budget_metropole.json",
     }
 
-    # get_all_json_files(data_collectivite, data_metropole)
-    create_report(docx_path, data_collectivite, data_metropole)
+    get_all_json_files(data_collectivite, data_metropole)
+    # create_report(docx_path, data_collectivite, data_metropole)

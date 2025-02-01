@@ -5,7 +5,7 @@ Génère un JSON contenant la liste des projets sociaux de la collectivité.
     "projets": [
         {
         "theme": "Energies renouvelables",
-        "categorie": "Financement des établissements d’enseignement",
+        "categorie": "Energies solaires",
         "investissements": [
             {
             "libelle": "Libellé du projet",
@@ -23,8 +23,8 @@ Génère un JSON contenant la liste des projets sociaux de la collectivité.
         ]
         },
         {
-        "theme": "Sport, culture et vie associative",
-        "categorie": "Financement des équipements sportifs",
+        "theme": "Mobilité douces et transports propres",
+        "categorie": "Transport individuel",
         "investissements": [
             {
             "libelle": "Libellé du projet",
@@ -43,8 +43,8 @@ Génère un JSON contenant la liste des projets sociaux de la collectivité.
         ]
         },
         {
-        "theme": "Sport, culture et vie associative",
-        "categorie": "Financement des équipements de la vie associative",
+        "theme": "Efficacité énergétique de la construction et de l’aménagement urbain",
+        "categorie": "Construction/acquisition ou rénovation",
         "investissements": [
             {
             "libelle": "Libellé du projet",
@@ -57,8 +57,8 @@ Génère un JSON contenant la liste des projets sociaux de la collectivité.
         ]
         },
         {
-        "theme": "Développement et cohésion territoriale",
-        "categorie": "Renouvellement urbain d’un Quartier Prioritaire de la Ville",
+        "theme": "Energies Renouvelables",
+        "categorie": "Energies solaires",
         "investissements": [
             {
             "libelle": "Libellé du projet",
