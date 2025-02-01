@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-let regionsData = [];
-let departmentData = [];
-=======
 // Helper function for suggestion items with keyboard navigation
 function createSuggestionItem(text) {
   const item = document.createElement('div');
@@ -35,7 +31,7 @@ function createSuggestionItem(text) {
   return item;
 }
 
->>>>>>> Stashed changes
+
 let citiesData = [];
 
 // DOM Elements for suggestions and messages
@@ -58,23 +54,11 @@ fetch('data/v_commune_2024.csv')
     rows.forEach(row => {
       const columns = row.split(',');
       if (columns.length > 1) {
-<<<<<<< Updated upstream
-        console.log(columns[0])
-        if (columns[0] === 'COM') {
-          console.log("test");
-          citiesData.push({
-            code: columns[1],          // Code commune
-            cityName: columns[7],      // Nom de la commune
-            departmentCode: columns[3] // Code département
-          });
-        }  // Suppression de la parenthèse fermante en trop ici
-=======
         citiesData.push({
           code: columns[1].trim(),
           cityName: columns[7].trim(),
           departmentCode: columns[3].trim()
         });
->>>>>>> Stashed changes
       }
     });
     suggestionsDiv.innerHTML = '';
@@ -84,18 +68,8 @@ fetch('data/v_commune_2024.csv')
     suggestionsDiv.innerHTML = "Erreur de chargement des données.";
   });
 
-<<<<<<< Updated upstream
-
-// DOM elements
-const clientNameInput = document.getElementById('clientName');
-const suggestionsDiv = document.getElementById('suggestions');
-const messageDiv = document.getElementById('message');
-
-// Input event for dynamic suggestions
-=======
 // Debounce input events for suggestions
 let debounceTimer;
->>>>>>> Stashed changes
 clientNameInput.addEventListener('input', () => {
   clearTimeout(debounceTimer);
   debounceTimer = setTimeout(() => {

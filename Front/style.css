@@ -85,6 +85,7 @@ body {
 }
 
 /* Hero Section */
+
 .hero {
   position: relative;
   height: 30vh;
@@ -92,7 +93,7 @@ body {
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, var(--color-tertiary), var(--color-tertiary-hover)), 
-              url('img/hero-bg.jpg') center/cover no-repeat;
+              url('Front/img/hero-bg.jpg') center/cover no-repeat;
 }
 .hero-overlay {
   position: absolute;
@@ -385,4 +386,5 @@ input[type="text"]:focus {
 }
 .suggestions div {
   padding: 0.5rem;
-  cursor: pointer
+  cursor: pointer;
+  transition: background 0.3s;}
