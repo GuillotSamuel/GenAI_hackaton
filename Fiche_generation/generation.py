@@ -17,17 +17,13 @@ def load_json(file_path):
 
 def call_llm_api(query):
     api_url = "https://api.your-llm-service.aws.com/endpoint"
-    
     payload = {
         "query": query
     }
-
     headers = {
         "Authorization": "Bearer your_api_key"  # Ajoutez votre clé API si nécessaire
     }
-
     response = requests.post(api_url, json=payload, headers=headers)
-    
     if response.status_code == 200:
         return response.json()  # Retourne les données JSON si la requête réussit
     else:
@@ -38,6 +34,11 @@ def call_llm_api(query):
 def create_json(file_path, data):
     with open(file_path, 'w') as f:
         json.dump(data, f, indent=4)
+        
+        
+def get_prompt(path):
+    with open(path, 'r') as f:
+        return f.read()
 
 
 def get_all_json_files():
@@ -45,66 +46,66 @@ def get_all_json_files():
     ### COLLECTIVITE ###
     
     # Logo de la collectivité
-    prompt = ""
+    prompt = get_prompt("data/prompts/logo_collectivite.txt")
     create_json(data_collectivite['logo_collectivite'], call_llm_api(prompt))
 
     # Finances de la collectivité
-    prompt = ""
+    prompt = get_prompt("data/prompts/finances_collectivite.txt")
     create_json(data_collectivite['finances_collectivite'], call_llm_api(prompt))
     
     # Présentation de la collectivité
-    prompt = ""
+    prompt = get_prompt("data/prompts/presentation_collectivite.txt")
     create_json(data_collectivite['presentation_collectivite'], call_llm_api(prompt))
     
     # Projets verts de la collectivité
-    prompt = ""
+    prompt = get_prompt("data/prompts/projets_verts_collectivite.txt")
     create_json(data_collectivite['projets_verts_collectivite'], call_llm_api(prompt))
     
     # Projets sociaux de la collectivité
-    prompt = ""
+    prompt = get_prompt("data/prompts/projets_sociaux_collectivite.txt")
     create_json(data_collectivite['projets_sociaux_collectivite'], call_llm_api(prompt))
     
     # Représentant de la collectivité
-    prompt = ""
+    prompt = get_prompt("data/prompts/representant_collectivite.txt")
     create_json(data_collectivite['representant_collectivite'], call_llm_api(prompt))
     
     # Budget de la collectivité
-    prompt = ""
+    prompt = get_prompt("data/prompts/budget_collectivite.txt")
     create_json(data_collectivite['budget_collectivite'], call_llm_api(prompt))
     
     # Type de collectivité
-    prompt = ""
+    prompt = get_prompt("data/prompts/type_collectivite.txt")
     create_json(data_collectivite['type_collectivite'], call_llm_api(prompt))
     
     # A une métropole
-    prompt = ""
+    prompt = get_prompt("data/prompts/has_a_metropole.txt")
     create_json(data_collectivite['has_a_metropole'], call_llm_api(prompt))
     
     
     ### METROPOLE ###
     
     # Finances de la métropole
-    prompt = ""
+    prompt = get_prompt("data/prompts/finances_metropole.txt")
     create_json(data_collectivite['finances_metropole'], call_llm_api(prompt))
     
     # Présentation de la métropole
-    prompt = ""
+    prompt = get_prompt("data/prompts/presentation_metropole.txt")
     create_json(data_collectivite['presentation_metropole'], call_llm_api(prompt))
     
     # Projets verts de la métropole
-    prompt = ""
+    prompt = get_prompt("data/prompts/projets_verts_metropole.txt")
     create_json(data_collectivite['projets_verts_metropole'], call_llm_api(prompt))
     
     # Projets sociaux de la métropole
-    prompt = ""
+    prompt = get_prompt("data/prompts/projets_sociaux_metropole.txt")
     create_json(data_collectivite['projets_sociaux_metropole'], call_llm_api(prompt))
     
     # Représentant de la métropole
-    prompt = ""
+    prompt = get_prompt("data/prompts/representant_metropole.txt")
     create_json(data_collectivite['representant_metropole'], call_llm_api(prompt))
     
     # Budget de la métropole
-    prompt = ""
+    prompt = get_prompt("data/prompts/budget_metropole.txt")
     create_json(data_collectivite['budget_metropole'], call_llm_api(prompt))
     
         
