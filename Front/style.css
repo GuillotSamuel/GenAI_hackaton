@@ -435,10 +435,6 @@ footer {
   justify-content: center;
 }
 
-.site-footer {
-  
-}
-
 .footer-container {
   display: flex;
   justify-content: space-between;
@@ -497,20 +493,20 @@ footer {
   margin-bottom: 1rem;
 }
 
-/* Positionnement absolu pour la liste des suggestions, directement sous l'input */
+/* Mise à jour du style de la liste des suggestions */
 .input-wrapper .suggestions {
   position: absolute;
-  top: 100%;  /* Juste en dessous de l'input */
+  top: 100%;  /* Directement en dessous de l'input */
   left: 0;
   right: 0;
   background: #fff;
   border: 1px solid var(--border);
-  border-top: none;
-  border-radius: 0 0 6px 6px;
+  border-top: 8px 8px 0 0;
+  border-radius: 0 0 8px 8px; /* Augmentation du border-radius */
   z-index: 10;
   max-height: 200px;
   overflow-y: auto;
-  display: none; /* On l'affiche dynamiquement dans le JS */
+  display: none; /* Affiché dynamiquement par le JS */
 }
 
 .input-wrapper .suggestions.show {
@@ -659,4 +655,14 @@ footer {
     width: 100%;
     text-align: center;
   }
+}
+
+/* Style pour les en-têtes des catégories dans la liste de suggestions */
+.suggestions-header {
+  background-color: var(--color-tertiary); /* Utilisation de la couleur d'accent (#95BB20) */
+  color: #fff;                           /* Texte en blanc */
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  font-size: 0.9rem;
+  border-top: 1px solid var(--border);
 }

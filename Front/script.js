@@ -92,48 +92,86 @@ fetch('data/v_commune_2024.csv')
     suggestionsDiv.innerHTML = "Erreur de chargement des données";
   });
 
+// Fonction de normalisation mise à jour pour enlever les accents et les tirets
+function normalizeString(str) {
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")  // Supprime les accents
+    .replace(/-/g, ' ')               // Remplace les tirets par des espaces
+    .trim();
+}
+
   function setupSearch() {
     let debounceTimer;
-  
+
     clientNameInput.addEventListener('input', () => {
+      // Dès que l'utilisateur commence à taper, on efface le message d'erreur
+      if (clientNameInput.value.trim() !== '') {
+        messageDiv.textContent = '';
+        messageDiv.className = 'message';
+      }
+      
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
-        const searchTerm = clientNameInput.value.trim().toLowerCase();
-        // Réinitialise le conteneur des suggestions
+        const searchTerm = clientNameInput.value.trim();
+        const searchTermNormalized = normalizeString(searchTerm);
         suggestionsDiv.innerHTML = '';
-  
-        // Affiche rien si moins de 2 caractères
-        if (searchTerm.length < 2) {
+    
+        if (searchTermNormalized.length < 2) {
           suggestionsDiv.classList.remove('show');
           return;
         }
-  
-        // Recherche combinée : utilisation de startsWith pour matcher uniquement au début
-        const results = [
-          ...citiesData.filter(c => 
-            c.cityName.toLowerCase().startsWith(searchTerm) ||
-            c.departmentCode.toLowerCase().startsWith(searchTerm)
-          ),
-          ...departmentData.filter(d => 
-            d.departmentName.toLowerCase().startsWith(searchTerm) ||
-            d.code.toLowerCase().startsWith(searchTerm)
-          ),
-          ...regionsData.filter(d => 
-            d.regionName.toLowerCase().startsWith(searchTerm) ||
-            d.code.toLowerCase().startsWith(searchTerm)
-          )
-        ];
-  
-        if (results.length > 0) {
-          results.forEach(item => {
-            const isCity = 'cityName' in item;
-            const text = isCity 
-              ? `${item.cityName} (${item.departmentCode})`
-              : 'departmentName' in item
-                ? `${item.departmentName} (${item.code})`
-                : `${item.regionName} (${item.code})`;
-            suggestionsDiv.appendChild(createSuggestionItem(text));
+    
+        // Recherche par catégories avec startsWith et normalisation pour ignorer la casse et les accents
+        const regionResults = regionsData.filter(d => 
+          normalizeString(d.regionName).startsWith(searchTermNormalized) ||
+          normalizeString(d.code).startsWith(searchTermNormalized)
+        );
+        const departmentResults = departmentData.filter(d => 
+          normalizeString(d.departmentName).startsWith(searchTermNormalized) ||
+          normalizeString(d.code).startsWith(searchTermNormalized)
+        );
+        const cityResults = citiesData.filter(c => 
+          normalizeString(c.cityName).startsWith(searchTermNormalized) ||
+          normalizeString(c.departmentCode).startsWith(searchTermNormalized)
+        );
+    
+        // Fonction pour ajouter un header pour chaque groupe
+        function appendHeader(text) {
+          const header = document.createElement('div');
+          header.textContent = text;
+          header.className = 'suggestions-header';
+          suggestionsDiv.appendChild(header);
+        }
+    
+        let resultsFound = false;
+    
+        if (regionResults.length > 0) {
+          appendHeader('Régions');
+          regionResults.forEach(item => {
+            suggestionsDiv.appendChild(createSuggestionItem(`${item.regionName} (${item.code})`));
           });
+          resultsFound = true;
+        }
+    
+        if (departmentResults.length > 0) {
+          appendHeader('Départements');
+          departmentResults.forEach(item => {
+            suggestionsDiv.appendChild(createSuggestionItem(`${item.departmentName} (${item.code})`));
+          });
+          resultsFound = true;
+        }
+    
+        if (cityResults.length > 0) {
+          appendHeader('Communes');
+          cityResults.forEach(item => {
+            suggestionsDiv.appendChild(createSuggestionItem(`${item.cityName} (${item.departmentCode})`));
+          });
+          resultsFound = true;
+        }
+    
+        if (resultsFound) {
           suggestionsDiv.classList.add('show');
         } else {
           suggestionsDiv.textContent = 'Aucun résultat trouvé';
