@@ -15,20 +15,50 @@ def load_json(file_path):
 
 # CALL LLM
 
-def call_llm_api(query):
-    api_url = "https://api.your-llm-service.aws.com/endpoint"
-    payload = {
-        "query": query
+# def call_llm_api(query):
+#     api_url = "https://api.your-llm-service.aws.com/endpoint"
+#     payload = {
+#         "query": query
+#     }
+#     headers = {
+#         "Authorization": "Bearer your_api_key"  # Ajoutez votre clé API si nécessaire
+#     }
+#     response = requests.post(api_url, json=payload, headers=headers)
+#     if response.status_code == 200:
+#         return response.json()  # Retourne les données JSON si la requête réussit
+#     else:
+#         print(f"Erreur : {response.status_code}")
+#         return {}
+
+
+def call_llm_api_mock(query): # TEST
+    """
+    Simulation de l'appel à un LLM, retourne une réponse factice en JSON.
+    
+    Arguments :
+    - query (str) : La requête envoyée.
+    
+    Retourne :
+    - dict : Une réponse simulée en JSON.
+    """
+    
+    print(f"📩 Envoi de la requête au LLM : {query}")  # Affiche la requête pour debug
+
+    # Simulation de réponse en JSON selon la requête
+    response_mock = {
+        "dirigeants": [
+            {
+                "nom": "Jean Dupont",
+                "fonction": "Maire",
+                "date_naissance": "1965-07-21",
+                "formation": ["École Nationale d'Administration", "Master en droit public"],
+                "carriere": ["Adjoint au maire", "Conseiller municipal"]
+            }
+        ]
     }
-    headers = {
-        "Authorization": "Bearer your_api_key"  # Ajoutez votre clé API si nécessaire
-    }
-    response = requests.post(api_url, json=payload, headers=headers)
-    if response.status_code == 200:
-        return response.json()  # Retourne les données JSON si la requête réussit
-    else:
-        print(f"Erreur : {response.status_code}")
-        return {}
+
+    print("✅ Réponse simulée reçue !")
+    return response_mock 
 
 
 def create_json(file_path, data):
@@ -41,72 +71,72 @@ def get_prompt(path):
         return f.read()
 
 
-def get_all_json_files():
+def get_all_json_files(data_collectivite, data_metropole):
     
     ### COLLECTIVITE ###
     
     # Logo de la collectivité
     prompt = get_prompt("data/prompts/logo_collectivite.txt")
-    create_json(data_collectivite['logo_collectivite'], call_llm_api(prompt))
+    create_json(data_collectivite['logo_collectivite'], call_llm_api_mock(prompt))
 
     # Finances de la collectivité
     prompt = get_prompt("data/prompts/finances_collectivite.txt")
-    create_json(data_collectivite['finances_collectivite'], call_llm_api(prompt))
+    create_json(data_collectivite['finances_collectivite'], call_llm_api_mock(prompt))
     
     # Présentation de la collectivité
     prompt = get_prompt("data/prompts/presentation_collectivite.txt")
-    create_json(data_collectivite['presentation_collectivite'], call_llm_api(prompt))
+    create_json(data_collectivite['presentation_collectivite'], call_llm_api_mock(prompt))
     
     # Projets verts de la collectivité
     prompt = get_prompt("data/prompts/projets_verts_collectivite.txt")
-    create_json(data_collectivite['projets_verts_collectivite'], call_llm_api(prompt))
+    create_json(data_collectivite['projets_verts_collectivite'], call_llm_api_mock(prompt))
     
     # Projets sociaux de la collectivité
     prompt = get_prompt("data/prompts/projets_sociaux_collectivite.txt")
-    create_json(data_collectivite['projets_sociaux_collectivite'], call_llm_api(prompt))
+    create_json(data_collectivite['projets_sociaux_collectivite'], call_llm_api_mock(prompt))
     
     # Représentant de la collectivité
     prompt = get_prompt("data/prompts/representant_collectivite.txt")
-    create_json(data_collectivite['representant_collectivite'], call_llm_api(prompt))
+    create_json(data_collectivite['representant_collectivite'], call_llm_api_mock(prompt))
     
     # Budget de la collectivité
     prompt = get_prompt("data/prompts/budget_collectivite.txt")
-    create_json(data_collectivite['budget_collectivite'], call_llm_api(prompt))
+    create_json(data_collectivite['budget_collectivite'], call_llm_api_mock(prompt))
     
     # Type de collectivité
     prompt = get_prompt("data/prompts/type_collectivite.txt")
-    create_json(data_collectivite['type_collectivite'], call_llm_api(prompt))
+    create_json(data_collectivite['type_collectivite'], call_llm_api_mock(prompt))
     
     # A une métropole
     prompt = get_prompt("data/prompts/has_a_metropole.txt")
-    create_json(data_collectivite['has_a_metropole'], call_llm_api(prompt))
+    create_json(data_collectivite['has_a_metropole'], call_llm_api_mock(prompt))
     
     
     ### METROPOLE ###
     
     # Finances de la métropole
     prompt = get_prompt("data/prompts/finances_metropole.txt")
-    create_json(data_collectivite['finances_metropole'], call_llm_api(prompt))
+    create_json(data_metropole['finances_metropole'], call_llm_api_mock(prompt))
     
     # Présentation de la métropole
     prompt = get_prompt("data/prompts/presentation_metropole.txt")
-    create_json(data_collectivite['presentation_metropole'], call_llm_api(prompt))
+    create_json(data_metropole['presentation_metropole'], call_llm_api_mock(prompt))
     
     # Projets verts de la métropole
     prompt = get_prompt("data/prompts/projets_verts_metropole.txt")
-    create_json(data_collectivite['projets_verts_metropole'], call_llm_api(prompt))
+    create_json(data_metropole['projets_verts_metropole'], call_llm_api_mock(prompt))
     
     # Projets sociaux de la métropole
     prompt = get_prompt("data/prompts/projets_sociaux_metropole.txt")
-    create_json(data_collectivite['projets_sociaux_metropole'], call_llm_api(prompt))
+    create_json(data_metropole['projets_sociaux_metropole'], call_llm_api_mock(prompt))
     
     # Représentant de la métropole
     prompt = get_prompt("data/prompts/representant_metropole.txt")
-    create_json(data_collectivite['representant_metropole'], call_llm_api(prompt))
+    create_json(data_metropole['representant_metropole'], call_llm_api_mock(prompt))
     
     # Budget de la métropole
     prompt = get_prompt("data/prompts/budget_metropole.txt")
-    create_json(data_collectivite['budget_metropole'], call_llm_api(prompt))
+    create_json(data_metropole['budget_metropole'], call_llm_api_mock(prompt))
     
         
 # DOCUMENT CREATION
