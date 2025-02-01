@@ -467,8 +467,8 @@ footer {
 /* Style du bouton */
 .back-to-top {
   position: fixed;
-  bottom: 20px; /* Distance depuis le bas */
-  right: 20px;  /* Distance depuis la droite */
+  bottom: 30px; /* Distance depuis le bas */
+  right: 30px;  /* Distance depuis la droite */
   background-color: white;
   color: #02ADB1;
   border: none;
