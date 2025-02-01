@@ -1,80 +1,79 @@
 import pandas as pd
+import json
 from docx import Document
-from docx.shared import Inches
+from docx.shared import Pt, Inches
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
 
-def open_csv(file_path, sep=',', encoding='utf-8') -> pd.DataFrame:
-    """ Ouvre un fichier CSV et retourne un DataFrame pandas. """
-    try:
-        df = pd.read_csv(file_path, sep=sep, encoding=encoding)
-        print(f"Fichier '{file_path}' ouvert avec succès.")
-        return df
-    except FileNotFoundError:
-        print(f"Erreur : Le fichier '{file_path}' n'existe pas.")
-    except pd.errors.EmptyDataError:
-        print(f"Erreur : Le fichier '{file_path}' est vide.")
-    except pd.errors.ParserError:
-        print(f"Erreur : Le fichier '{file_path}' est mal formaté.")
-    except Exception as e:
-        print(f"Erreur inattendue : {e}")
-    return None
+def load_json(file_path):
+    with open(file_path, 'r') as f:
+        return json.load(f)
+    
+
+def add_cover_page(doc, data_collectivite, data_metropole):
+    # Chargement du fichier has_a_metropole
+    has_metropole_data = load_json(data_collectivite['has_a_metropole'])
+    has_metropole = has_metropole_data.get('has_a_metropole', False)
+    
+    # Chargement des informations de la collectivité et de la métropole
+    collectivity_name = load_json(data_collectivite['presentation_collectivite']).get('name', 'Collectivité Anonyme')
+    if has_metropole:
+        metropole_name = load_json(data_metropole['presentation_metropole']).get('name', None)
+    
+    # Ajouter un titre principal avec un style
+    title_paragraph = doc.add_paragraph()
+    title_run = title_paragraph.add_run('Fiche Client')
+    title_run.bold = True  # Mettre en gras
+    title_run.font.size = Pt(24)  # Taille de police 24
+    title_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER  # Centrer le titre
+    
+    # Ajouter une image (logo)
+    doc.add_paragraph()  # Ajouter un saut de ligne
+    doc.add_picture("data/img/logo.png", width=Inches(2.5))  # Modifier la largeur de l'image à 2.5 pouces
+    doc.add_paragraph()  # Ajouter un autre saut de ligne pour espacer le logo du texte
+
+    # Ajouter le nom de la collectivité
+    collectivity_paragraph = doc.add_paragraph()
+    collectivity_run = collectivity_paragraph.add_run(f"Collectivité : {collectivity_name}")
+    collectivity_run.font.size = Pt(16)  # Taille de la police 16
+    collectivity_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT  # Aligner à gauche
+    
+    # Si la collectivité a une métropole, ajouter son nom
+    if has_metropole and metropole_name:
+        metropole_paragraph = doc.add_paragraph()
+        metropole_run = metropole_paragraph.add_run(f"Métropole : {metropole_name}")
+        metropole_run.font.size = Pt(16)  # Taille de la police 16
+        metropole_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT  # Aligner à gauche
 
 
-def add_dataframe_to_docx(doc, df, title):
-    """ Ajoute un DataFrame sous forme de tableau dans le document Word. """
-    doc.add_heading(title, level=2)  # Ajouter un titre
-
-    if df is not None and not df.empty:
-        table = doc.add_table(rows=1, cols=len(df.columns))
-        table.style = "Table Grid"
-
-        # Ajouter les en-têtes
-        hdr_cells = table.rows[0].cells
-        for i, column_name in enumerate(df.columns):
-            hdr_cells[i].text = column_name
-
-        # Ajouter les lignes
-        for _, row in df.iterrows():
-            row_cells = table.add_row().cells
-            for i, value in enumerate(row):
-                row_cells[i].text = str(value)
-
-        doc.add_paragraph()  # Ajouter un espace après le tableau
-    else:
-        doc.add_paragraph("Aucune donnée disponible pour ce tableau.\n")
-
-
-def create_report(docx_path, csv_files):
-    """ Génère un fichier Word contenant tous les CSV sous forme de tableaux. """
+def create_report(docx_path, data_collectivite, data_metropole):
     doc = Document()
-    doc.add_heading("Rapport de Données CSV", level=1)  # Titre principal
-
-    for title, file_path in csv_files.items():
-        df = open_csv(file_path)  # Charger le CSV
-        add_dataframe_to_docx(doc, df, title)  # Ajouter au document Word
-
+    add_cover_page(doc, data_collectivite, data_metropole)
     doc.save(docx_path)
-    print(f"📄 Rapport généré avec succès : {docx_path}")
 
 
 if __name__ == "__main__":
     docx_path = "data/processed/data_report.docx"
     
-    # Dictionnaire des fichiers CSV
-    csv_files = {
-        "Finance": "data/raw/finance.csv",
-        "Finance Métropole": "data/raw/finance_metropole.csv",
-        "Présentation Générale": "data/raw/presentation_generale.csv",
-        "Métropole": "data/raw/metropole.csv",
-        "Maire": "data/raw/mayor.csv",
-        "Président de Métropole": "data/raw/metropole_president.csv",
-        "Projets Écologiques Collecte": "data/raw/green_projects.csv",
-        "Projets Écologiques Métropole": "data/raw/green_metropole_projects.csv",
-        "Projets Sociaux": "data/raw/social_projects.csv",
-        "Projets Sociaux Métropole": "data/raw/social_metropole_projects.csv",
-        "Budget": "data/raw/budget.csv",
-        "Budget Métropole": "data/raw/budget_metropole.csv",
-        "Comparaison Autres Clients": "data/raw/comparison_other_clients.csv",
+    data_collectivite = {
+        'logo_collectivite': "data/raw/logo_collectivite.json",
+        'finances_collectivite': "data/raw/finances_collectivite.json",
+        'presentation_collectivite': "data/raw/presentation_collectivite.json",
+        'projets_verts_collectivite': "data/raw/projets_verts_collectivite.json",
+        'projets_sociaux_collectivite': "data/raw/projets_sociaux_collectivite.json",
+        'representant_collectivite': "data/raw/representant_collectivite.json",
+        'budget_collectivite': "data/raw/budget_collectivite.json",
+        'type_collectivite': "data/raw/type_collectivite.json",
+        'has_a_metropole': "data/raw/has_a_metropole.json",
+    }
+    
+    data_metropole = {
+        'finances_metropole': "data/raw/finances_metropole.json",
+        'presentation_metropole': "data/raw/presentation_metropole.json",
+        'projets_verts_metropole': "data/raw/projets_verts_metropole.json",
+        'projets_sociaux_metropole': "data/raw/projets_sociaux_metropole.json",
+        'representant_metropole': "data/raw/representant_metropole.json",
+        'budget_metropole': "data/raw/budget_metropole.json",
     }
 
-    create_report(docx_path, csv_files)
+    create_report(docx_path, data_collectivite, data_metropole)
