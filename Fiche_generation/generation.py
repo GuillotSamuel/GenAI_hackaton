@@ -11,54 +11,50 @@ import requests
 def load_json(file_path):
     with open(file_path, 'r') as f:
         return json.load(f)
-    
+
 
 # CALL LLM
 
-# def call_llm_api(query):
-#     api_url = "https://api.your-llm-service.aws.com/endpoint"
-#     payload = {
-#         "query": query
-#     }
-#     headers = {
-#         "Authorization": "Bearer your_api_key"  # Ajoutez votre clé API si nécessaire
-#     }
-#     response = requests.post(api_url, json=payload, headers=headers)
-#     if response.status_code == 200:
-#         return response.json()  # Retourne les données JSON si la requête réussit
-#     else:
-#         print(f"Erreur : {response.status_code}")
-#         return {}
-
-
-def call_llm_api_mock(query): # TEST
-    """
-    Simulation de l'appel à un LLM, retourne une réponse factice en JSON.
-    
-    Arguments :
-    - query (str) : La requête envoyée.
-    
-    Retourne :
-    - dict : Une réponse simulée en JSON.
-    """
-    
-    print(f"📩 Envoi de la requête au LLM : {query}")  # Affiche la requête pour debug
-
-    # Simulation de réponse en JSON selon la requête
-    response_mock = {
-        "dirigeants": [
-            {
-                "nom": "Jean Dupont",
-                "fonction": "Maire",
-                "date_naissance": "1965-07-21",
-                "formation": ["École Nationale d'Administration", "Master en droit public"],
-                "carriere": ["Adjoint au maire", "Conseiller municipal"]
-            }
-        ]
+def call_llm_api(query):
+    api_url = "https://api.your-llm-service.aws.com/endpoint"
+    payload = {
+        "query": query
     }
+    headers = {
+        "Authorization": "Bearer your_api_key"  # Ajoutez votre clé API si nécessaire
+    }
+    response = requests.post(api_url, json=payload, headers=headers)
+    if response.status_code == 200:
+        return response.json()  # Retourne les données JSON si la requête réussit
+    else:
+        print(f"Erreur : {response.status_code}")
+        return {}
 
-    print("✅ Réponse simulée reçue !")
-    return response_mock 
+
+# def call_llm_api_mock(query): # TEST
+#     """
+#     Simulation de l'appel à un LLM, retourne une réponse factice en JSON.
+    
+#     Arguments :
+#     - query (str) : La requête envoyée.
+    
+#     Retourne :
+#     - dict : Une réponse simulée en JSON.
+#     """
+    
+#     print(f"📩 Envoi de la requête au LLM : {query}")  # Affiche la requête pour debug
+
+#     # Simulation de réponse en JSON selon la requête
+#     response_mock = {
+#                 "nom": "Jean Dupont",
+#                 "fonction": "Maire",
+#                 "date_naissance": "1965-07-21",
+#                 "formation": ["École Nationale d'Administration", "Master en droit public"],
+#                 "carriere": ["Adjoint au maire", "Conseiller municipal"]
+#     }
+
+#     print("✅ Réponse simulée reçue !")
+#     return response_mock 
 
 
 def create_json(file_path, data):
@@ -77,75 +73,123 @@ def get_all_json_files(data_collectivite, data_metropole):
     
     # Logo de la collectivité
     prompt = get_prompt("data/prompts/logo_collectivite.txt")
-    create_json(data_collectivite['logo_collectivite'], call_llm_api_mock(prompt))
+    create_json(data_collectivite['logo_collectivite'], call_llm_api(prompt))
 
     # Finances de la collectivité
     prompt = get_prompt("data/prompts/finances_collectivite.txt")
-    create_json(data_collectivite['finances_collectivite'], call_llm_api_mock(prompt))
+    create_json(data_collectivite['finances_collectivite'], call_llm_api(prompt))
     
     # Présentation de la collectivité
     prompt = get_prompt("data/prompts/presentation_collectivite.txt")
-    create_json(data_collectivite['presentation_collectivite'], call_llm_api_mock(prompt))
+    create_json(data_collectivite['presentation_collectivite'], call_llm_api(prompt))
     
     # Projets verts de la collectivité
     prompt = get_prompt("data/prompts/projets_verts_collectivite.txt")
-    create_json(data_collectivite['projets_verts_collectivite'], call_llm_api_mock(prompt))
+    create_json(data_collectivite['projets_verts_collectivite'], call_llm_api(prompt))
     
     # Projets sociaux de la collectivité
     prompt = get_prompt("data/prompts/projets_sociaux_collectivite.txt")
-    create_json(data_collectivite['projets_sociaux_collectivite'], call_llm_api_mock(prompt))
+    create_json(data_collectivite['projets_sociaux_collectivite'], call_llm_api(prompt))
     
     # Représentant de la collectivité
     prompt = get_prompt("data/prompts/representant_collectivite.txt")
-    create_json(data_collectivite['representant_collectivite'], call_llm_api_mock(prompt))
+    create_json(data_collectivite['representant_collectivite'], call_llm_api(prompt))
     
     # Budget de la collectivité
     prompt = get_prompt("data/prompts/budget_collectivite.txt")
-    create_json(data_collectivite['budget_collectivite'], call_llm_api_mock(prompt))
+    create_json(data_collectivite['budget_collectivite'], call_llm_api(prompt))
     
     # Type de collectivité
     prompt = get_prompt("data/prompts/type_collectivite.txt")
-    create_json(data_collectivite['type_collectivite'], call_llm_api_mock(prompt))
+    create_json(data_collectivite['type_collectivite'], call_llm_api(prompt))
     
     # A une métropole
     prompt = get_prompt("data/prompts/has_a_metropole.txt")
-    create_json(data_collectivite['has_a_metropole'], call_llm_api_mock(prompt))
+    create_json(data_collectivite['has_a_metropole'], call_llm_api(prompt))
     
     
     ### METROPOLE ###
     
     # Finances de la métropole
     prompt = get_prompt("data/prompts/finances_metropole.txt")
-    create_json(data_metropole['finances_metropole'], call_llm_api_mock(prompt))
+    create_json(data_metropole['finances_metropole'], call_llm_api(prompt))
     
     # Présentation de la métropole
     prompt = get_prompt("data/prompts/presentation_metropole.txt")
-    create_json(data_metropole['presentation_metropole'], call_llm_api_mock(prompt))
+    create_json(data_metropole['presentation_metropole'], call_llm_api(prompt))
     
     # Projets verts de la métropole
     prompt = get_prompt("data/prompts/projets_verts_metropole.txt")
-    create_json(data_metropole['projets_verts_metropole'], call_llm_api_mock(prompt))
+    create_json(data_metropole['projets_verts_metropole'], call_llm_api(prompt))
     
     # Projets sociaux de la métropole
     prompt = get_prompt("data/prompts/projets_sociaux_metropole.txt")
-    create_json(data_metropole['projets_sociaux_metropole'], call_llm_api_mock(prompt))
+    create_json(data_metropole['projets_sociaux_metropole'], call_llm_api(prompt))
     
     # Représentant de la métropole
     prompt = get_prompt("data/prompts/representant_metropole.txt")
-    create_json(data_metropole['representant_metropole'], call_llm_api_mock(prompt))
+    create_json(data_metropole['representant_metropole'], call_llm_api(prompt))
     
     # Budget de la métropole
     prompt = get_prompt("data/prompts/budget_metropole.txt")
-    create_json(data_metropole['budget_metropole'], call_llm_api_mock(prompt))
+    create_json(data_metropole['budget_metropole'], call_llm_api(prompt))
     
         
 # DOCUMENT CREATION
 
-def add_cover_page(doc, data_collectivite, data_metropole):
-    # Chargement du fichier has_a_metropole
-    has_metropole_data = load_json(data_collectivite['has_a_metropole'])
-    has_metropole = has_metropole_data.get('has_a_metropole', False)
+# def add_representants(dec, data_collectivite, data_metropole, has_metropole):
+#     # Chargement des informations de la collectivité et de la métropole
+#     representant_collectivite = load_json(data_collectivite['representant_collectivite'])
     
+#     # Accéder au premier représentant dans la liste
+#     if representant_collectivite and isinstance(representant_collectivite, list):
+#         representant_collectivite = representant_collectivite[0]  # Prendre le premier élément de la liste
+#     else:
+#         representant_collectivite = {}
+
+#     if has_metropole:
+#         representant_metropole = load_json(data_metropole['representant_metropole'])
+#         if representant_metropole and isinstance(representant_metropole, list):
+#             representant_metropole = representant_metropole[0]  # Prendre le premier élément de la liste
+#         else:
+#             representant_metropole = {}
+
+#     print(representant_collectivite)  # Vérifier la structure du dictionnaire
+
+#     # Ajouter un titre pour les représentants
+#     dec.add_heading('Représentants', level=1)
+    
+#     # Ajouter les informations du représentant de la collectivité
+#     dec.add_heading('Collectivité', level=2)
+#     dec.add_paragraph(f"Nom : {representant_collectivite.get('nom', 'Non disponible')}")
+#     dec.add_paragraph(f"Fonction : {representant_collectivite.get('fonction', 'Non disponible')}")
+#     dec.add_paragraph(f"Date de naissance : {representant_collectivite.get('date_naissance', 'Non disponible')}")
+    
+#     dec.add_heading('Formation', level=3)
+#     for formation in representant_collectivite.get('formation', []):
+#         dec.add_paragraph(formation)
+    
+#     dec.add_heading('Carrière', level=3)
+#     for poste in representant_collectivite.get('carriere', []):
+#         dec.add_paragraph(poste)
+    
+#     # Ajouter les informations du représentant de la métropole si elle existe
+#     if has_metropole:
+#         dec.add_heading('Métropole', level=2)
+#         dec.add_paragraph(f"Nom : {representant_metropole.get('nom', 'Non disponible')}")
+#         dec.add_paragraph(f"Fonction : {representant_metropole.get('fonction', 'Non disponible')}")
+#         dec.add_paragraph(f"Date de naissance : {representant_metropole.get('date_naissance', 'Non disponible')}")
+        
+#         dec.add_heading('Formation', level=3)
+#         for formation in representant_metropole.get('formation', []):
+#             dec.add_paragraph(formation)
+        
+#         dec.add_heading('Carrière', level=3)
+#         for poste in representant_metropole.get('carriere', []):
+#             dec.add_paragraph(poste)
+
+
+def add_cover_page(doc, data_collectivite, data_metropole, has_metropole):
     # Chargement des informations de la collectivité et de la métropole
     collectivity_name = load_json(data_collectivite['presentation_collectivite']).get('name', 'Collectivité Anonyme')
     if has_metropole:
@@ -178,9 +222,11 @@ def add_cover_page(doc, data_collectivite, data_metropole):
 
 
 def create_report(docx_path, data_collectivite, data_metropole):
+    has_metropole_data = load_json(data_collectivite['has_a_metropole'])
+    has_metropole = has_metropole_data.get('has_a_metropole', False)
     doc = Document()
-    add_cover_page(doc, data_collectivite, data_metropole)
-    
+    add_cover_page(doc, data_collectivite, data_metropole, has_metropole)
+    add_representants(doc, data_collectivite, data_metropole, has_metropole)
     doc.save(docx_path)
 
 
@@ -210,5 +256,5 @@ if __name__ == "__main__":
         'budget_metropole': "data/raw/budget_metropole.json",
     }
 
-    get_all_json_files(data_collectivite, data_metropole)
+    # get_all_json_files(data_collectivite, data_metropole)
     create_report(docx_path, data_collectivite, data_metropole)
