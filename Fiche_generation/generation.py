@@ -180,6 +180,7 @@ def add_cover_page(doc, data_collectivite, data_metropole):
 def create_report(docx_path, data_collectivite, data_metropole):
     doc = Document()
     add_cover_page(doc, data_collectivite, data_metropole)
+    
     doc.save(docx_path)
 
 
