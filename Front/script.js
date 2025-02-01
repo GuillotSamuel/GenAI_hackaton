@@ -193,7 +193,7 @@ document.getElementById('excelFile').addEventListener('change', function(e) {
     const reader = new FileReader();
     reader.onload = function(evt) {
       // Simulate processing of internal data file (Excel/CSV)
-      const content = evt.target.result;
+      const content = evt.target.result;perçu
       aggregatedPreview.textContent = "Aperçu des données importées: " + content.slice(0, 200) + "...";
       importMessage.textContent = "Fichier importé avec succès.";
     }
