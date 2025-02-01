@@ -31,8 +31,10 @@ function createSuggestionItem(text) {
   return item;
 }
 
-
 let citiesData = [];
+let regionsData = [];
+let departmentData = [];
+
 
 // DOM Elements for suggestions and messages
 const suggestionsDiv = document.getElementById('suggestions');
@@ -44,54 +46,92 @@ suggestionsDiv.innerHTML = "<div class='spinner'></div>";
 
 fetch('data/v_commune_2024.csv')
   .then(response => {
-    if (!response.ok) {
-      throw new Error('Erreur lors du chargement du fichier CSV.');
-    }
+    if (!response.ok) throw new Error('Erreur lors du chargement du fichier CSV.');
     return response.text();
   })
   .then(csvData => {
-    const rows = csvData.split('\n');
+    // Nettoyage et traitement du CSV
+    const rows = csvData
+      .split('\n')
+      .slice(1) // On ignore l'en-tête
+      .filter(row => row.trim() !== ''); // Filtre les lignes vides
+
     rows.forEach(row => {
-      const columns = row.split(',');
-      if (columns.length > 1) {
+      // Découpage des colonnes en gérant les guillemets
+      const columns = row
+        .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/) // Regex pour ignorer les virgules dans les guillemets
+        .map(col => col.replace(/^"|"$/g, '').trim()); // Nettoyage des guillemets
+
+      const type = columns[0];
+      
+      if (type === "COM" && columns.length > 9) {
         citiesData.push({
-          code: columns[1].trim(),
-          cityName: columns[7].trim(),
-          departmentCode: columns[3].trim()
+          code: columns[1],
+          cityName: columns[9], // LIBELLE à l'index 9
+          departmentCode: columns[1]
+        });
+      }
+      else if (type === "DEP" && columns.length > 9) {
+        departmentData.push({
+          code: columns[1],
+          departmentName: columns[8]
+        });
+      }
+      else if (type === "REG" && columns.length > 9) {
+        regionsData.push({
+          code: columns[1],
+          regionName: columns[9]
         });
       }
     });
-    suggestionsDiv.innerHTML = '';
+
+    // Gestion de la recherche (une seule fois après chargement)
+    setupSearch();
   })
   .catch(error => {
-    console.error("Erreur lors du chargement du CSV:", error);
-    suggestionsDiv.innerHTML = "Erreur de chargement des données.";
+    console.error("Erreur CSV:", error);
+    suggestionsDiv.innerHTML = "Erreur de chargement des données";
   });
 
-// Debounce input events for suggestions
-let debounceTimer;
-clientNameInput.addEventListener('input', () => {
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(() => {
-    const inputValue = clientNameInput.value.trim();
-    suggestionsDiv.innerHTML = '';
-    if (inputValue.length === 0) return;
-    const filteredCities = citiesData.filter(city =>
-      city.cityName.toLowerCase().includes(inputValue.toLowerCase()) ||
-      city.departmentCode.includes(inputValue)
-    );
-    if (filteredCities.length > 0) {
-      filteredCities.forEach(city => {
-        const cleanCityName = city.cityName.replace(/["\)]/g, '');
-        const cleanDepartmentCode = city.departmentCode.replace(/["\)]/g, '');
-        const displayText = `${cleanCityName} ${cleanDepartmentCode}`;
-        suggestionsDiv.appendChild(createSuggestionItem(displayText));
-      });
-    } else {
-      suggestionsDiv.textContent = 'Aucune ville ou département trouvé.';
-    }
-  }, 300);
-});
+function setupSearch() {
+  let debounceTimer;
+
+  clientNameInput.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      const searchTerm = clientNameInput.value.trim().toLowerCase();
+      suggestionsDiv.innerHTML = '';
+
+      if (searchTerm.length < 2) return;
+
+      // Recherche combinée
+      const results = [
+        ...citiesData.filter(c => 
+          c.cityName.toLowerCase().includes(searchTerm) ||
+          c.departmentCode.toLowerCase() === searchTerm
+        ),
+        ...departmentData.filter(d => 
+          d.departmentName.toLowerCase().includes(searchTerm) ||
+          d.code.toLowerCase() === searchTerm
+        )
+      ];
+
+      // Affichage des résultats
+      if (results.length > 0) {
+        results.forEach(item => {
+          const isCity = 'cityName' in item;
+          const text = isCity 
+            ? `${item.cityName} (${item.departmentCode})`
+            : `${item.departmentName} [Département ${item.code}]`;
+            
+          suggestionsDiv.appendChild(createSuggestionItem(text));
+        });
+      } else {
+        suggestionsDiv.textContent = 'Aucun résultat trouvé';
+      }
+    }, 300);
+  });
+}
 
 clientNameInput.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowDown') {
