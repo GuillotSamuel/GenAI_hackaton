@@ -27,7 +27,7 @@ body {
   line-height: 1.6;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  justify-content: center;
 }
 
 /* Container */
@@ -35,6 +35,13 @@ body {
   width: 90%;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+/* Section */
+.elements-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 /* Visually Hidden (Accessibility) */
@@ -50,11 +57,25 @@ body {
   overflow: hidden;
 }
 
+/* Main */
+
+main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+p {
+  color: black;
+}
+
 /* Navbar */
 .navbar {
   background: var(--card-bg);
   padding: 0.75rem 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -65,8 +86,9 @@ body {
   justify-content: space-between;
 }
 .logo {
-  height: 28px;
+  height: 60px;
   width: auto;
+  margin: 10px 0;
 }
 .nav-menu {
   list-style: none;
@@ -140,6 +162,9 @@ body {
 .about {
   padding: 2rem 0;
   text-align: center;
+  background-color: #fafafa;
+  width: 100%;
+  padding: 70px;
 }
 .about h2 {
   font-size: 1.75rem;
@@ -156,6 +181,9 @@ body {
 .features {
   padding: 2rem 0;
   text-align: center;
+  width:100%;
+  margin: 50px;
+  padding: 0 70px;
 }
 .features h2 {
   font-size: 1.75rem;
@@ -164,14 +192,14 @@ body {
 }
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   gap: 1.5rem;
 }
 .feature-item {
   background: var(--card-bg);
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   transition: transform 0.3s;
 }
 .feature-item:hover {
@@ -219,7 +247,7 @@ body {
   padding: 1rem;
   background: var(--card-bg);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 /* Comparison Section */
@@ -241,7 +269,7 @@ body {
   background: var(--card-bg);
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 .comparison-item h3 {
   font-size: 1.25rem;
@@ -286,9 +314,11 @@ body {
 }
 
 /* Generate Section (Card) */
+
 .generate {
-  padding: 2rem 0;
   text-align: center;
+  margin: 50px;
+  margin-top: 40px;
 }
 .generate h2 {
   font-size: 1.75rem;
@@ -298,8 +328,8 @@ body {
 .card {
   background: var(--card-bg);
   border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 3rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   margin-top: 1rem;
   position: relative;
   z-index: 2;
@@ -336,7 +366,7 @@ input[type="text"]:focus {
   cursor: pointer;
   font-size: 1rem;
   transition: background 0.3s, box-shadow 0.3s;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
   position: relative;
   overflow: hidden;
 }
@@ -375,10 +405,14 @@ input[type="text"]:focus {
 .suggestions {
   margin-top: 0.75rem;
   border: 1px solid var(--border);
+  display: none;
   border-radius: 6px;
   max-height: 200px;
   overflow-y: auto;
   animation: fadeIn 0.5s ease-in-out;
+  position:absolute;
+  background-color: white;
+  ;
 }
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -388,3 +422,71 @@ input[type="text"]:focus {
   padding: 0.5rem;
   cursor: pointer;
   transition: background 0.3s;}
+
+
+/* Footer */
+footer {
+  margin-top: 50px;
+  width: 100%;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  background-color: #E6E6E6;
+  justify-content: center;
+}
+
+.site-footer {
+  
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-menu {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+
+.footer-menu li a {
+  text-decoration: none;
+  color: var(--color-primary);
+  transition: color 0.3s;
+}
+
+.footer-menu li a:hover{
+  color: #02ADB1
+}
+
+
+/* Button back to top */
+
+/* Style du bouton */
+.back-to-top {
+  position: fixed;
+  bottom: 20px; /* Distance depuis le bas */
+  right: 20px;  /* Distance depuis la droite */
+  background-color: white;
+  color: #02ADB1;
+  border: none;
+  border-radius: 50%;
+  padding: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 1000;
+  width: 50px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  display: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Effet au survol */
+.back-to-top:hover {
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}

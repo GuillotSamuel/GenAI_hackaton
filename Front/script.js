@@ -102,7 +102,10 @@ function setupSearch() {
       const searchTerm = clientNameInput.value.trim().toLowerCase();
       suggestionsDiv.innerHTML = '';
 
-      if (searchTerm.length < 2) return;
+      if (searchTerm.length < 2) {
+        
+        return;
+      }
 
       // Recherche combinée
       const results = [
@@ -133,6 +136,7 @@ function setupSearch() {
             
           suggestionsDiv.appendChild(createSuggestionItem(text));
         });
+        suggestionsDiv.style.display = 'block';
       } else {
         suggestionsDiv.textContent = 'Aucun résultat trouvé';
       }
@@ -215,3 +219,5 @@ document.getElementById('submitFeedback').addEventListener('click', function() {
     feedbackMessage.className = "message success";
   }
 });
+
+
