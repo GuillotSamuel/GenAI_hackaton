@@ -254,13 +254,18 @@ document.getElementById('excelFile').addEventListener('change', function(e) {
 
 // Feedback Submission
 document.getElementById('submitFeedback').addEventListener('click', function() {
-  const feedbackText = document.getElementById('feedbackText').value;
-  const feedbackMessage = document.getElementById('feedbackMessage');
-  if (feedbackText.trim() === "") {
-    feedbackMessage.textContent = "Veuillez entrer un commentaire.";
-    feedbackMessage.className = "message error";
-  } else {
-    feedbackMessage.textContent = "Merci pour votre feedback!";
-    feedbackMessage.className = "message success";
+  const submitFeedbackBtn = document.getElementById('submitFeedback');
+  if (submitFeedbackBtn) {
+    submitFeedbackBtn.addEventListener('click', function() {
+      const feedbackText = document.getElementById('feedbackText').value;
+      const feedbackMessage = document.getElementById('feedbackMessage');
+      if (feedbackText.trim() === "") {
+        feedbackMessage.textContent = "Veuillez entrer un commentaire.";
+        feedbackMessage.className = "message error";
+      } else {
+        feedbackMessage.textContent = "Merci pour votre feedback!";
+        feedbackMessage.className = "message success";
+      }
+    });
   }
 });
