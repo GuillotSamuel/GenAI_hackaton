@@ -68,7 +68,7 @@ fetch('data/v_commune_2024.csv')
         citiesData.push({
           code: columns[1],
           cityName: columns[9], // LIBELLE à l'index 9
-          departmentCode: columns[1]
+          departmentCode: columns[3]
         });
       }
       else if (type === "DEP" && columns.length > 9) {
@@ -79,8 +79,8 @@ fetch('data/v_commune_2024.csv')
       }
       else if (type === "REG" && columns.length > 9) {
         regionsData.push({
-          code: columns[1],
-          regionName: columns[9]
+          code: columns[3],
+          regionName: columns[8]
         });
       }
     });
@@ -113,6 +113,10 @@ function setupSearch() {
         ...departmentData.filter(d => 
           d.departmentName.toLowerCase().includes(searchTerm) ||
           d.code.toLowerCase() === searchTerm
+        ),
+        ...regionsData.filter(d => 
+          d.regionName.toLowerCase().includes(searchTerm) ||
+          d.code.toLowerCase() === searchTerm
         )
       ];
 
@@ -120,9 +124,12 @@ function setupSearch() {
       if (results.length > 0) {
         results.forEach(item => {
           const isCity = 'cityName' in item;
-          const text = isCity 
+          const text = 'cityName' in item 
             ? `${item.cityName} (${item.departmentCode})`
-            : `${item.departmentName} [Département ${item.code}]`;
+            : 'departmentName' in item
+              ? `${item.departmentName} (${item.code})`
+              : `${item.regionName} (${item.code})`;
+
             
           suggestionsDiv.appendChild(createSuggestionItem(text));
         });
