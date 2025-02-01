@@ -74,7 +74,7 @@ fetch('data/v_commune_2024.csv')
         citiesData.push({
           code: columns[1],
           cityName: columns[9],
-          departmentCode: columns[3]
+          departmentCode: columns[1]
         });
       } else if (type === "DEP" && columns.length > 9) {
         departmentData.push({
