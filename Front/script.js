@@ -35,13 +35,22 @@ let citiesData = [];
 let regionsData = [];
 let departmentData = [];
 
-
 // DOM Elements for suggestions and messages
 const suggestionsDiv = document.getElementById('suggestions');
 const messageDiv = document.getElementById('message');
 const clientNameInput = document.getElementById('clientName');
 
-// Show spinner while loading CSV data for suggestions (existing functionality)
+// Fonction de normalisation pour enlever accents et tirets
+function normalizeString(str) {
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // Supprime les accents
+    .replace(/-/g, ' ')              // Remplace les tirets par des espaces
+    .trim();
+}
+
+// Afficher un spinner pendant le chargement du CSV
 suggestionsDiv.innerHTML = "<div class='spinner'></div>";
 
 fetch('data/v_commune_2024.csv')
@@ -53,39 +62,32 @@ fetch('data/v_commune_2024.csv')
     // Nettoyage et traitement du CSV
     const rows = csvData
       .split('\n')
-      .slice(1) // On ignore l'en-tête
-      .filter(row => row.trim() !== ''); // Filtre les lignes vides
-
+      .slice(1) // Ignorer l'en-tête
+      .filter(row => row.trim() !== '');
+    
     rows.forEach(row => {
-      // Découpage des colonnes en gérant les guillemets
       const columns = row
-        .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/) // Regex pour ignorer les virgules dans les guillemets
-        .map(col => col.replace(/^"|"$/g, '').trim()); // Nettoyage des guillemets
-
+        .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
+        .map(col => col.replace(/^"|"$/g, '').trim());
       const type = columns[0];
-      
       if (type === "COM" && columns.length > 9) {
         citiesData.push({
           code: columns[1],
-          cityName: columns[9], // LIBELLE à l'index 9
-          departmentCode: columns[3]
+          cityName: columns[9],
+          departmentCode: columns[1]
         });
-      }
-      else if (type === "DEP" && columns.length > 9) {
+      } else if (type === "DEP" && columns.length > 9) {
         departmentData.push({
           code: columns[1],
           departmentName: columns[8]
         });
-      }
-      else if (type === "REG" && columns.length > 9) {
+      } else if (type === "REG" && columns.length > 9) {
         regionsData.push({
           code: columns[3],
           regionName: columns[8]
         });
       }
     });
-
-    // Gestion de la recherche (une seule fois après chargement)
     setupSearch();
   })
   .catch(error => {
@@ -95,46 +97,68 @@ fetch('data/v_commune_2024.csv')
 
 function setupSearch() {
   let debounceTimer;
-
   clientNameInput.addEventListener('input', () => {
+    // Effacer le message d'erreur dès que l'utilisateur tape
+    if (clientNameInput.value.trim() !== '') {
+      messageDiv.textContent = '';
+      messageDiv.className = 'message';
+    }
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
-      const searchTerm = clientNameInput.value.trim().toLowerCase();
+      const searchTerm = clientNameInput.value.trim();
+      const searchTermNormalized = normalizeString(searchTerm);
       suggestionsDiv.innerHTML = '';
-
-      if (searchTerm.length < 2) return;
-
-      // Recherche combinée
-      const results = [
-        ...citiesData.filter(c => 
-          c.cityName.toLowerCase().includes(searchTerm) ||
-          c.departmentCode.toLowerCase() === searchTerm
-        ),
-        ...departmentData.filter(d => 
-          d.departmentName.toLowerCase().includes(searchTerm) ||
-          d.code.toLowerCase() === searchTerm
-        ),
-        ...regionsData.filter(d => 
-          d.regionName.toLowerCase().includes(searchTerm) ||
-          d.code.toLowerCase() === searchTerm
-        )
-      ];
-
-      // Affichage des résultats
-      if (results.length > 0) {
-        results.forEach(item => {
-          const isCity = 'cityName' in item;
-          const text = 'cityName' in item 
-            ? `${item.cityName} (${item.departmentCode})`
-            : 'departmentName' in item
-              ? `${item.departmentName} (${item.code})`
-              : `${item.regionName} (${item.code})`;
-
-            
-          suggestionsDiv.appendChild(createSuggestionItem(text));
+      if (searchTermNormalized.length < 2) {
+        suggestionsDiv.classList.remove('show');
+        return;
+      }
+      const regionResults = regionsData.filter(d => 
+        normalizeString(d.regionName).startsWith(searchTermNormalized) ||
+        normalizeString(d.code).startsWith(searchTermNormalized)
+      );
+      const departmentResults = departmentData.filter(d => 
+        normalizeString(d.departmentName).startsWith(searchTermNormalized) ||
+        normalizeString(d.code).startsWith(searchTermNormalized)
+      );
+      const cityResults = citiesData.filter(c => 
+        normalizeString(c.cityName).startsWith(searchTermNormalized) ||
+        normalizeString(c.departmentCode).startsWith(searchTermNormalized)
+      );
+      
+      function appendHeader(text) {
+        const header = document.createElement('div');
+        header.textContent = text;
+        header.className = 'suggestions-header';
+        suggestionsDiv.appendChild(header);
+      }
+      
+      let resultsFound = false;
+      if (regionResults.length > 0) {
+        appendHeader('Régions');
+        regionResults.forEach(item => {
+          suggestionsDiv.appendChild(createSuggestionItem(`${item.regionName} (${item.code})`));
         });
+        resultsFound = true;
+      }
+      if (departmentResults.length > 0) {
+        appendHeader('Départements');
+        departmentResults.forEach(item => {
+          suggestionsDiv.appendChild(createSuggestionItem(`${item.departmentName} (${item.code})`));
+        });
+        resultsFound = true;
+      }
+      if (cityResults.length > 0) {
+        appendHeader('Communes');
+        cityResults.forEach(item => {
+          suggestionsDiv.appendChild(createSuggestionItem(`${item.cityName} (${item.departmentCode})`));
+        });
+        resultsFound = true;
+      }
+      if (resultsFound) {
+        suggestionsDiv.classList.add('show');
       } else {
         suggestionsDiv.textContent = 'Aucun résultat trouvé';
+        suggestionsDiv.classList.add('show');
       }
     }, 300);
   });
@@ -150,7 +174,7 @@ clientNameInput.addEventListener('keydown', (e) => {
   }
 });
 
-// Generate Button functionality (existing)
+// Bouton Générer
 document.getElementById('generateFileBtn').addEventListener('click', () => {
   const clientName = clientNameInput.value.trim();
   if (!clientName) {
@@ -174,7 +198,6 @@ document.getElementById('generateFileBtn').addEventListener('click', () => {
     .then(data => {
       messageDiv.textContent = data.message || 'Fichier généré avec succès.';
       messageDiv.className = 'message success';
-      // Simulate updating the generated sheet preview
       document.getElementById('generatedSheet').innerHTML = `<p>${data.message || 'Fiche client générée.'}</p>`;
     })
     .catch(error => {
@@ -184,34 +207,60 @@ document.getElementById('generateFileBtn').addEventListener('click', () => {
     });
 });
 
-// File Import Functionality
-document.getElementById('excelFile').addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  const importMessage = document.getElementById('importMessage');
-  const aggregatedPreview = document.getElementById('aggregatedPreview');
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-      // Simulate processing of internal data file (Excel/CSV)
-      const content = evt.target.result;
-      aggregatedPreview.textContent = "Aperçu des données importées: " + content.slice(0, 200) + "...";
-      importMessage.textContent = "Fichier importé avec succès.";
-    }
-    reader.readAsText(file);
-  } else {
-    importMessage.textContent = "Aucun fichier sélectionné.";
-  }
+// Bouton Importer
+const importFileBtn = document.getElementById('importFileBtn');
+const fileInput = document.getElementById('fileInput');
+
+if (importFileBtn && fileInput) {
+  importFileBtn.addEventListener('click', () => {
+    fileInput.click();
+  });
+}
+  fileInput.setAttribute('multiple', true); // Permettre les fichiers multiples
+  fileInput.addEventListener('change', function(e) {
+  const files = Array.from(e.target.files);
+  const filesContainer = document.getElementById('uploadedFiles');
+  filesContainer.innerHTML = '';
+  
+  files.forEach((file, index) => {
+    const fileItem = document.createElement('div');
+    fileItem.className = 'file-item';
+    fileItem.innerHTML = `
+      <span>${file.name}</span>
+      <span class="remove-file" data-index="${index}">&times;</span>
+    `;
+    filesContainer.appendChild(fileItem);
+  });
+
+  // Gestion de la suppression
+  filesContainer.querySelectorAll('.remove-file').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const index = parseInt(btn.dataset.index);
+      const dt = new DataTransfer();
+      const filesArray = Array.from(fileInput.files);
+      
+      filesArray.splice(index, 1);
+      filesArray.forEach(file => dt.items.add(file));
+      fileInput.files = dt.files;
+      
+      btn.parentElement.remove();
+    });
+  });
 });
 
-// Feedback Submission
-document.getElementById('submitFeedback').addEventListener('click', function() {
-  const feedbackText = document.getElementById('feedbackText').value;
-  const feedbackMessage = document.getElementById('feedbackMessage');
-  if (feedbackText.trim() === "") {
-    feedbackMessage.textContent = "Veuillez entrer un commentaire.";
-    feedbackMessage.className = "message error";
-  } else {
-    feedbackMessage.textContent = "Merci pour votre feedback!";
-    feedbackMessage.className = "message success";
+
+
+// Back-to-top Button
+document.addEventListener('DOMContentLoaded', () => {
+  const backToTopButton = document.getElementById('back-to-top');
+  if (backToTopButton) {
+    const handleScroll = () => {
+      backToTopButton.style.display = window.scrollY > 200 ? 'block' : 'none';
+    };
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 });
