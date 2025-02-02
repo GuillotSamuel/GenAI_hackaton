@@ -58,12 +58,12 @@ Fichotron - AI est une application web destinée à automatiser la génération 
    ```bash
    git clone https://github.com/votre-utilisateur/votre-repo.git
 
-    2.	Naviguez dans le dossier du projet :
+	2.	Naviguez dans le dossier du projet :
 
 cd votre-repo
 
 
-    3.	Ouvrez le fichier index.html dans votre navigateur ou utilisez un serveur local (par exemple, avec Live Server dans VSCode).
+	3.	Ouvrez le fichier index.html dans votre navigateur ou utilisez un serveur local (par exemple, avec Live Server dans VSCode).
 
 ### Exécution
 
@@ -72,22 +72,22 @@ Le projet est entièrement statique. Une fois cloné, il suffit d’ouvrir index
 ### 🖥️ Déploiement
 
 Pour déployer le site sur AWS S3 et CloudFront :
-    1.	Hébergement S3 :
-    •	Mettez à jour votre bucket S3 avec les fichiers du projet (HTML, CSS, JS, images, etc.).
-    •	Utilisez l’AWS CLI pour synchroniser le contenu, par exemple :
+	1.	Hébergement S3 :
+	•	Mettez à jour votre bucket S3 avec les fichiers du projet (HTML, CSS, JS, images, etc.).
+	•	Utilisez l’AWS CLI pour synchroniser le contenu, par exemple :
 
 aws s3 sync ./ s3://votre-bucket --delete
 
 
-    2.	CloudFront :
-    •	Configurez une distribution CloudFront pointant vers votre bucket S3.
-    •	Effectuez une invalidation du cache pour rafraîchir les contenus après chaque déploiement :
+	2.	CloudFront :
+	•	Configurez une distribution CloudFront pointant vers votre bucket S3.
+	•	Effectuez une invalidation du cache pour rafraîchir les contenus après chaque déploiement :
 
 aws cloudfront create-invalidation --distribution-id YOUR_DISTRIBUTION_ID --paths "/*"
 
 
-    3.	Automatisation (optionnel) :
-    •	Utilisez GitHub Actions pour automatiser le déploiement à chaque push sur la branche principale.
+	3.	Automatisation (optionnel) :
+	•	Utilisez GitHub Actions pour automatiser le déploiement à chaque push sur la branche principale.
 
 ## 🏗️ Structure du projet
 
