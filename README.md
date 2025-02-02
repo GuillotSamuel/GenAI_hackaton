@@ -19,6 +19,10 @@ Fichotron - AI est une application web destinée à automatiser la génération 
   - [Licence](#licence)
   - [🚀 Réalisé par la LLaMazing Team](#-réalisé-par-la-llamazing-team)
 
+## Diagramme
+
+https://app.diagrams.net/#G1wKoANF0H5xbULkWWFFZlY7RqFiJ2JjhM#%7B"pageId"%3A"WGVoRFlgTZLI0gF91VrL"%7D
+
 ## Fonctionnalités
 
 - **Génération de fiches clients :** 
