@@ -64,7 +64,7 @@ fetch('data/v_commune_2024.csv')
 
       const type = columns[0];
       
-      if (type === "COM" && columns.length > 9) {
+      if ((type === "COM" || type === "COMD") && columns.length > 9) {
         citiesData.push({
           code: columns[1],
           cityName: columns[9], // LIBELLE à l'index 9
