@@ -91,7 +91,7 @@
             <input
               type="text"
               id="clientName"
-              placeholder="Nom du client ou département"
+              placeholder="Nom du client"
               required
               aria-autocomplete="list"
             />
@@ -101,14 +101,18 @@
           <!-- Groupe de boutons avec Importer (nouveau) et Générer -->
           <!-- Corriger la section des boutons -->
           <div class="button-group">
-          <button class="btn import-btn" id="importFileBtn" aria-label="Importer un fichier">
-            <i class="fas fa-upload" aria-hidden="true"></i> Importer
-          </button>
-          <div class="spacer"></div>
-          <button class="btn generate-btn" id="generateFileBtn" aria-label="Générer la fiche client">
-            <i class="fas fa-download" aria-hidden="true"></i> Générer
-          </button>
-          <div id="uploadedFiles" class="uploaded-files"></div> <!-- Déplacé en dehors du bouton -->
+            <div class="import-section">
+              <button class="btn import-btn" id="importFileBtn" aria-label="Importer un fichier">
+                <i class="fas fa-upload" aria-hidden="true"></i> Importer
+              </button>
+              <div id="uploadedFiles" class="uploaded-files"></div>
+            </div>
+            <div class="spacer"></div>
+            <div class="generate-section">
+              <button class="btn generate-btn" id="generateFileBtn" aria-label="Générer la fiche client">
+                <i class="fas fa-download" aria-hidden="true"></i> Générer
+              </button>
+            </div>
           </div>
           <div id="message" class="message" role="alert" aria-live="assertive"></div>
           <!-- Champ de fichier caché pour l'importation -->

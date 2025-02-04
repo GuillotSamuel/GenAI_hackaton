@@ -650,24 +650,44 @@ footer {
 }
 
 /* Vous pouvez ajouter des media queries pour affiner le bouton si besoin */
-@media (max-width: 480px) {
-  .button-group {
-    flex-direction: column;
-  }
-  
-  .spacer {
-    display: none;
-  }
-  
-  .btn {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .file-item {
-    font-size: 0.9rem;
-    padding: 0.5rem;
-  }
+.button-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 15px;
+  padding: 10px 0;
+}
+
+.import-section, .generate-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.uploaded-files {
+  width: 80%;
+  margin-top: 10px;
+}
+
+.spacer {
+  width: 80%;
+  height: 1px;
+  background-color: #e0e0e0 !important;
+  margin: 10px auto !important;
+}
+
+.button-group .btn {
+  width: 100%;
+  max-width: 200px;
+  margin: 0;
+  padding: 12px 24px;
+}
+
+/* Remove the pseudo-element separator */
+.button-group .btn:first-child::after {
+  display: none;
 }
 
 /* Style pour les en-têtes des catégories dans la liste de suggestions */
@@ -709,12 +729,6 @@ footer {
 .btn.generate-btn {
   width: 150px; /* Largeur fixe pour tous les boutons */
 }
-
-/* Ajustez le spacer pour qu'il prenne moins de place */
-.spacer {
-  flex: 0.5; /* Réduisez la valeur de flex pour rapprocher les boutons */
-}
-
 
 /* Améliorer l'affichage des fichiers */
 .uploaded-files {

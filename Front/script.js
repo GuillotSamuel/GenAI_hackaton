@@ -218,18 +218,18 @@ if (importFileBtn && fileInput) {
 }
   fileInput.setAttribute('multiple', true); // Permettre les fichiers multiples
   fileInput.addEventListener('change', function(e) {
-  const files = Array.from(e.target.files);
-  const filesContainer = document.getElementById('uploadedFiles');
-  filesContainer.innerHTML = '';
-  
-  files.forEach((file, index) => {
-    const fileItem = document.createElement('div');
-    fileItem.className = 'file-item';
-    fileItem.innerHTML = `
-      <span>${file.name}</span>
-      <span class="remove-file" data-index="${index}">&times;</span>
-    `;
-    filesContainer.appendChild(fileItem);
+    const files = Array.from(e.target.files);
+    const filesContainer = document.getElementById('uploadedFiles');
+    filesContainer.innerHTML = ''; // Clear existing files
+    
+    files.forEach((file, index) => {
+      const fileItem = document.createElement('div');
+      fileItem.className = 'file-item';
+      fileItem.innerHTML = `
+        <span>${file.name}</span>
+        <span class="remove-file" data-index="${index}">&times;</span>
+      `;
+      filesContainer.appendChild(fileItem);
   });
 
   // Gestion de la suppression
